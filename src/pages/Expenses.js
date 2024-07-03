@@ -1,10 +1,9 @@
-// src/pages/Expenses.js
 import React, { useState } from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import ExpenseList from '../components/ExpenseList';
 import ExpenseFilters from '../components/ExpenseFilters';
 import ExpenseModal from '../components/ExpenseModal';
-import NavBar from '../components/NavBar';
+import Layout from '../components/Layout';
 
 const initialExpenses = [
   { id: 1, date: '2023-07-01', category: 'Food', amount: 20, tags: ['Monthly'], notes: 'Lunch' },
@@ -46,15 +45,11 @@ const Expenses = () => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
-      <NavBar />
+    <Layout>
       <Typography variant="h4" gutterBottom>
         Expenses
       </Typography>
-      <ExpenseFilters filters={filters} onFilterChange={handleFilterChange} />
-      <Button variant="contained" color="primary" onClick={handleAddExpense}>
-        Add Expense
-      </Button>
+      <ExpenseFilters filters={filters} onFilterChange={handleFilterChange} handleAddExpense={handleAddExpense} />
       <ExpenseList expenses={expenses} onEdit={handleEditExpense} onDelete={handleDeleteExpense} />
       <ExpenseModal
         open={isModalOpen}
@@ -62,7 +57,7 @@ const Expenses = () => {
         onSave={handleSaveExpense}
         expense={selectedExpense}
       />
-    </Box>
+    </Layout>
   );
 };
 
