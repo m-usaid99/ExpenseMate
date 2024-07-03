@@ -1,3 +1,4 @@
+// src/components/LoginPage.js
 import React from 'react';
 import { Container, Typography, TextField, Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +9,7 @@ const LoginPage = () => {
   const handleLogin = (event) => {
     event.preventDefault();
     // Perform login logic here (e.g., validate user credentials)
-    // On successful login, navigate to the welcome page
+    // On successful login, navigate to the dashboard
     navigate('/dashboard');
   };
 
