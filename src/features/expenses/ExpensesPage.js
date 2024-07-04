@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import { Box, Typography } from '@mui/material';
-import ExpenseList from '../components/ExpenseList';
-import ExpenseFilters from '../components/ExpenseFilters';
-import ExpenseModal from '../components/ExpenseModal';
-import Layout from '../components/Layout';
+import { Typography } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { addExpense, editExpense, deleteExpense } from './expensesSlice';
+import ExpenseList from './ExpenseList';
+import ExpenseFilters from './ExpenseFilters';
+import ExpenseModal from './ExpenseModal';
+import Layout from '../../components/Layout';
 
-const initialExpenses = [
-  { id: 1, date: '2023-07-01', category: 'Food', amount: 20, tags: ['Monthly'], notes: 'Lunch' },
-  { id: 2, date: '2023-07-02', category: 'Rent', amount: 500, tags: ['Monthly'], notes: 'July Rent' }
-];
-
-const Expenses = () => {
-  const [expenses, setExpenses] = useState(initialExpenses);
+const ExpensesPage = () => {
+  const dispatch = useDispatch();
+  const { expenses, loading, error } = useSelector((state) => state.expenses);
   const [filters, setFilters] = useState({ search: '', category: '', tags: '' });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
@@ -31,18 +29,20 @@ const Expenses = () => {
   };
 
   const handleDeleteExpense = (id) => {
-    setExpenses((prevExpenses) => prevExpenses.filter((expense) => expense.id !== id));
+    dispatch(deleteExpense(id));
   };
 
   const handleSaveExpense = (expense) => {
     if (selectedExpense) {
-      setExpenses((prevExpenses) =>
-        prevExpenses.map((e) => (e.id === selectedExpense.id ? expense : e))
-      );
+      dispatch(editExpense(expense));
     } else {
-      setExpenses((prevExpenses) => [...prevExpenses, { ...expense, id: Date.now() }]);
+      dispatch(addExpense({ ...expense, id: Date.now() }));
     }
+    setIsModalOpen(false);
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <Layout>
@@ -61,4 +61,4 @@ const Expenses = () => {
   );
 };
 
-export default Expenses;
+export default ExpensesPage;
