@@ -6,18 +6,8 @@ const tags = ['Monthly', 'One-time', 'Recurring'];
 
 const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense }) => {
   return (
-    <Box sx={{ mb: 3 }}>
+    <Box sx={{ marginBottom: 3 }}>
       <Grid container spacing={2} alignItems="center">
-        <Grid item xs={12} sm={3} md={2}>
-          <TextField
-            label="Search"
-            value={filters.search}
-            onChange={(e) => onFilterChange('search', e.target.value)}
-            variant="outlined"
-            fullWidth
-            size="small"
-          />
-        </Grid>
         <Grid item xs={12} sm={3} md={2}>
           <TextField
             select
@@ -44,6 +34,7 @@ const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense }) => {
             variant="outlined"
             fullWidth
             size="small"
+            SelectProps={{ multiple: true }}
           >
             {tags.map((tag) => (
               <MenuItem key={tag} value={tag}>
@@ -54,7 +45,7 @@ const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense }) => {
         </Grid>
         <Grid item xs={12} sm={3} md={2}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginRight: '10px' }}>
-            <Button variant="contained" color="primary" onClick={handleAddExpense}>
+            <Button variant="contained" color="primary" onClick={handleAddExpense} sx={{ whiteSpace: 'nowrap' }}>
               Add Expense
             </Button>
           </Box>

@@ -30,4 +30,26 @@ const expensesSlice = createSlice({
 });
 
 export const { addExpense, editExpense, deleteExpense } = expensesSlice.actions;
+
+export const selectTotalExpenses = (state) => state.expenses.expenses.reduce((total, expense) => total + expense.amount, 0);
+
+export const selectExpenseTrendsData = (state) => {
+  const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July']; // Example labels
+  const data = labels.map(label => {
+    // Logic to calculate total expenses per month
+    return state.expenses.expenses.filter(expense => new Date(expense.date).getMonth() === labels.indexOf(label)).reduce((total, expense) => total + expense.amount, 0);
+  });
+  return {
+    labels,
+    datasets: [
+      {
+        label: 'Expenses',
+        data,
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      },
+    ],
+  };
+};
+
 export default expensesSlice.reducer;

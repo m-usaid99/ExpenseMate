@@ -7,7 +7,6 @@ import ExpensesPage from './features/expenses/ExpensesPage';
 import IncomePage from './features/income/IncomePage';
 import Budget from './pages/Budget';
 import Reports from './pages/Reports';
-import Categories from './pages/Categories';
 
 function App() {
   return (
@@ -19,7 +18,6 @@ function App() {
         <Route path="/income" element={<IncomePage />} />
         <Route path="/budget" element={<Budget />} />
         <Route path="/reports" element={<Reports />} />
-        <Route path="/categories" element={<Categories />} />
       </Routes>
     </Router>
   );

@@ -1,30 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, MenuItem } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Button,
+  MenuItem,
+} from "@mui/material";
 
-const categories = ['Salary', 'Freelance', 'Investments', 'Other'];
-const tags = ['Monthly', 'One-time', 'Recurring'];
+const categories = [
+  "Salary",
+  "Freelance",
+  "Investments",
+  "Healthcare",
+  "Education",
+  "Shopping",
+  "Travel",
+  "Miscellaneous",
+];
+const tags = ["Monthly", "One-time", "Recurring"];
 
 const IncomeModal = ({ open, onClose, onSave, income }) => {
   const [form, setForm] = useState({
-    date: '',
-    category: '',
-    amount: '',
-    tags: [], // Ensure tags is an array
-    notes: ''
+    date: "",
+    category: categories[0], // Default to the first built-in category
+    amount: "",
+    tags: [],
+    notes: "",
   });
 
   useEffect(() => {
     if (income) {
       setForm({
         ...income,
-        tags: Array.isArray(income.tags) ? income.tags : [income.tags], // Ensure tags is an array
+        tags: Array.isArray(income.tags) ? income.tags : [],
+      });
+    } else {
+      setForm({
+        date: "",
+        category: categories[0], // Default to the first built-in category
+        amount: "",
+        tags: [],
+        notes: "",
       });
     }
   }, [income]);
 
   const handleChange = (field, value) => {
-    if (field === 'tags') {
-      value = typeof value === 'string' ? value.split(',') : value; // Ensure value is an array
+    if (field === "tags") {
+      value = Array.isArray(value) ? value : value.split(",");
     }
     setForm((prevForm) => ({ ...prevForm, [field]: value }));
   };
@@ -36,13 +61,13 @@ const IncomeModal = ({ open, onClose, onSave, income }) => {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{income ? 'Edit Income' : 'Add Income'}</DialogTitle>
+      <DialogTitle>{income ? "Edit Income" : "Add Income"}</DialogTitle>
       <DialogContent>
         <TextField
           label="Date"
           type="date"
           value={form.date}
-          onChange={(e) => handleChange('date', e.target.value)}
+          onChange={(e) => handleChange("date", e.target.value)}
           fullWidth
           margin="normal"
           variant="outlined"
@@ -52,7 +77,7 @@ const IncomeModal = ({ open, onClose, onSave, income }) => {
           select
           label="Category"
           value={form.category}
-          onChange={(e) => handleChange('category', e.target.value)}
+          onChange={(e) => handleChange("category", e.target.value)}
           fullWidth
           margin="normal"
           variant="outlined"
@@ -67,7 +92,7 @@ const IncomeModal = ({ open, onClose, onSave, income }) => {
           label="Amount"
           type="number"
           value={form.amount}
-          onChange={(e) => handleChange('amount', e.target.value)}
+          onChange={(e) => handleChange("amount", e.target.value)}
           fullWidth
           margin="normal"
           variant="outlined"
@@ -76,7 +101,7 @@ const IncomeModal = ({ open, onClose, onSave, income }) => {
           select
           label="Tags"
           value={form.tags}
-          onChange={(e) => handleChange('tags', e.target.value)}
+          onChange={(e) => handleChange("tags", e.target.value)}
           fullWidth
           margin="normal"
           variant="outlined"
@@ -91,7 +116,7 @@ const IncomeModal = ({ open, onClose, onSave, income }) => {
         <TextField
           label="Notes"
           value={form.notes}
-          onChange={(e) => handleChange('notes', e.target.value)}
+          onChange={(e) => handleChange("notes", e.target.value)}
           fullWidth
           margin="normal"
           variant="outlined"

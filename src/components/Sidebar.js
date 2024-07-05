@@ -6,7 +6,6 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import PieChartIcon from '@mui/icons-material/PieChart';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import CategoryIcon from '@mui/icons-material/Category';
 import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
@@ -42,10 +41,6 @@ const Sidebar = () => {
         <ListItem component={Link} to="/reports">
           <ListItemIcon><BarChartIcon /></ListItemIcon>
           <ListItemText primary="Reports" />
-        </ListItem>
-        <ListItem component={Link} to="/categories">
-          <ListItemIcon><CategoryIcon /></ListItemIcon>
-          <ListItemText primary="Categories" />
         </ListItem>
       </List>
     </Drawer>

@@ -1,17 +1,17 @@
-import React from 'react';
-import { Box, TextField, MenuItem, Button, Grid } from '@mui/material';
+import React from "react";
+import { Box, TextField, MenuItem, Button, Grid } from "@mui/material";
 
-const categories = ['Salary', 'Freelance', 'Investments', 'Other'];
-const tags = ['Monthly', 'One-time', 'Recurring'];
+const categories = ["Salary", "Freelance", "Investments", "Other"];
+const tags = ["Monthly", "One-time", "Recurring"];
 
 const IncomeFilters = ({ filters, onFilterChange, handleAddIncome }) => {
   const handleTagsChange = (e) => {
     const value = e.target.value;
-    onFilterChange('tags', Array.isArray(value) ? value : [value]);
-    console.log('Tags Value:', value); // Debugging output
+    onFilterChange("tags", Array.isArray(value) ? value : [value]);
+    console.log("Tags Value:", value); // Debugging output
   };
 
-  console.log('Filters State:', filters); // Debugging output
+  console.log("Filters State:", filters); // Debugging output
 
   return (
     <Box sx={{ mb: 3 }}>
@@ -20,7 +20,7 @@ const IncomeFilters = ({ filters, onFilterChange, handleAddIncome }) => {
           <TextField
             label="Search"
             value={filters.search}
-            onChange={(e) => onFilterChange('search', e.target.value)}
+            onChange={(e) => onFilterChange("search", e.target.value)}
             variant="outlined"
             fullWidth
             size="small"
@@ -31,7 +31,7 @@ const IncomeFilters = ({ filters, onFilterChange, handleAddIncome }) => {
             select
             label="Category"
             value={filters.category}
-            onChange={(e) => onFilterChange('category', e.target.value)}
+            onChange={(e) => onFilterChange("category", e.target.value)}
             variant="outlined"
             fullWidth
             size="small"

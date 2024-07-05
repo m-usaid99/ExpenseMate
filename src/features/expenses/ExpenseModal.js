@@ -1,6 +1,5 @@
-// src/components/ExpenseModal.js
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, MenuItem } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, MenuItem, FormControlLabel, Checkbox } from '@mui/material';
 
 const categories = ['Food', 'Rent', 'Utilities', 'Entertainment'];
 const tags = ['Monthly', 'One-time', 'Recurring'];
@@ -11,7 +10,8 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
     category: '',
     amount: '',
     tags: [],
-    notes: ''
+    notes: '',
+    isRecurring: false
   });
 
   useEffect(() => {
@@ -90,6 +90,15 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
           fullWidth
           margin="normal"
           variant="outlined"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={form.isRecurring}
+              onChange={(e) => handleChange('isRecurring', e.target.checked)}
+            />
+          }
+          label="Recurring"
         />
       </DialogContent>
       <DialogActions>
