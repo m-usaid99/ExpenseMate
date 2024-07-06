@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Container, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { addExpense, editExpense, deleteExpense } from './expensesSlice';
@@ -18,6 +18,12 @@ const ExpensesPage = () => {
   const [filters, setFilters] = useState({ category: '', tags: [] });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
+
+  useEffect(() => {
+    console.log('Expenses:', expenses);
+    console.log('Total Expenses:', totalExpenses);
+    console.log('Expense Trends Data:', expenseTrendsData);
+  }, [expenses, totalExpenses, expenseTrendsData]);
 
   const handleFilterChange = (field, value) => {
     setFilters((prevFilters) => ({ ...prevFilters, [field]: value }));

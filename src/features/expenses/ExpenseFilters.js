@@ -1,8 +1,25 @@
-import React from 'react';
-import { Box, TextField, MenuItem, Button, Grid } from '@mui/material';
+import React from "react";
+import { Box, TextField, MenuItem, Button, Grid } from "@mui/material";
 
-const categories = ['Food', 'Rent', 'Utilities', 'Entertainment'];
-const tags = ['Monthly', 'One-time', 'Recurring'];
+const categories = [
+  "Food",
+  "Rent",
+  "Utilities",
+  "Entertainment",
+  "Transportation",
+  "Healthcare",
+  "Education",
+  "Insurance",
+  "Clothing",
+  "Savings",
+  "Travel",
+  "Household",
+  "Gifts",
+  "Dining Out",
+  "Miscellaneous",
+];
+
+const tags = ["Monthly", "One-time", "Recurring"];
 
 const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense }) => {
   return (
@@ -13,7 +30,7 @@ const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense }) => {
             select
             label="Category"
             value={filters.category}
-            onChange={(e) => onFilterChange('category', e.target.value)}
+            onChange={(e) => onFilterChange("category", e.target.value)}
             variant="outlined"
             fullWidth
             size="small"
@@ -30,7 +47,7 @@ const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense }) => {
             select
             label="Tags"
             value={filters.tags}
-            onChange={(e) => onFilterChange('tags', e.target.value)}
+            onChange={(e) => onFilterChange("tags", e.target.value)}
             variant="outlined"
             fullWidth
             size="small"
@@ -44,8 +61,19 @@ const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense }) => {
           </TextField>
         </Grid>
         <Grid item xs={12} sm={3} md={2}>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginRight: '10px' }}>
-            <Button variant="contained" color="primary" onClick={handleAddExpense} sx={{ whiteSpace: 'nowrap' }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginRight: "10px",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddExpense}
+              sx={{ whiteSpace: "nowrap" }}
+            >
               Add Expense
             </Button>
           </Box>

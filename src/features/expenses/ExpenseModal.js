@@ -1,43 +1,95 @@
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, MenuItem, FormControlLabel, Checkbox } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Button,
+  MenuItem,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 
-const categories = ['Food', 'Rent', 'Utilities', 'Entertainment'];
-const tags = ['Monthly', 'One-time', 'Recurring'];
+const categories = [
+  "Food",
+  "Rent",
+  "Utilities",
+  "Entertainment",
+  "Transportation",
+  "Healthcare",
+  "Education",
+  "Insurance",
+  "Clothing",
+  "Savings",
+  "Travel",
+  "Household",
+  "Gifts",
+  "Dining Out",
+  "Miscellaneous",
+];
+
+const tags = ["Monthly", "One-time", "Recurring"];
 
 const ExpenseModal = ({ open, onClose, onSave, expense }) => {
   const [form, setForm] = useState({
-    date: '',
-    category: '',
-    amount: '',
+    date: "",
+    category: "",
+    amount: "",
     tags: [],
-    notes: '',
-    isRecurring: false
+    notes: "",
+    isRecurring: false,
   });
 
   useEffect(() => {
     if (expense) {
-      setForm(expense);
+      setForm({
+        ...expense,
+        amount: expense.amount.toString(), // Ensure amount is treated as string for the input
+      });
+    } else {
+      setForm({
+        date: "",
+        category: "",
+        amount: "",
+        tags: [],
+        notes: "",
+        isRecurring: false,
+      });
     }
   }, [expense]);
 
   const handleChange = (field, value) => {
-    setForm((prevForm) => ({ ...prevForm, [field]: value }));
+    setForm((prevForm) => ({
+      ...prevForm,
+      [field]: field === "amount" ? parseFloat(value) : value,
+    }));
+  };
+
+  const handleTagChange = (e) => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      tags: e.target.value,
+    }));
   };
 
   const handleSave = () => {
-    onSave(form);
+    onSave({
+      ...form,
+      amount: parseFloat(form.amount), // Ensure amount is a number on save
+    });
     onClose();
   };
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{expense ? 'Edit Expense' : 'Add Expense'}</DialogTitle>
+      <DialogTitle>{expense ? "Edit Expense" : "Add Expense"}</DialogTitle>
       <DialogContent>
         <TextField
           label="Date"
           type="date"
           value={form.date}
-          onChange={(e) => handleChange('date', e.target.value)}
+          onChange={(e) => handleChange("date", e.target.value)}
           fullWidth
           margin="normal"
           variant="outlined"
@@ -47,7 +99,7 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
           select
           label="Category"
           value={form.category}
-          onChange={(e) => handleChange('category', e.target.value)}
+          onChange={(e) => handleChange("category", e.target.value)}
           fullWidth
           margin="normal"
           variant="outlined"
@@ -62,7 +114,7 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
           label="Amount"
           type="number"
           value={form.amount}
-          onChange={(e) => handleChange('amount', e.target.value)}
+          onChange={(e) => handleChange("amount", e.target.value)}
           fullWidth
           margin="normal"
           variant="outlined"
@@ -71,7 +123,7 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
           select
           label="Tags"
           value={form.tags}
-          onChange={(e) => handleChange('tags', e.target.value)}
+          onChange={handleTagChange}
           fullWidth
           margin="normal"
           variant="outlined"
@@ -86,7 +138,7 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
         <TextField
           label="Notes"
           value={form.notes}
-          onChange={(e) => handleChange('notes', e.target.value)}
+          onChange={(e) => handleChange("notes", e.target.value)}
           fullWidth
           margin="normal"
           variant="outlined"
@@ -95,7 +147,7 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
           control={
             <Checkbox
               checked={form.isRecurring}
-              onChange={(e) => handleChange('isRecurring', e.target.checked)}
+              onChange={(e) => handleChange("isRecurring", e.target.checked)}
             />
           }
           label="Recurring"
