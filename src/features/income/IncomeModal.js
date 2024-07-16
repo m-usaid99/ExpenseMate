@@ -12,15 +12,16 @@ import {
 const categories = [
   "Salary",
   "Freelance",
-  "Investments",
-  "Other"
+  "Investment",
+  "Other",
 ];
-const tags = ["Monthly", "One-time", "Recurring"];
+
+const tags = ["Monthly", "One-time", "Quarterly"];
 
 const IncomeModal = ({ open, onClose, onSave, income }) => {
   const [form, setForm] = useState({
-    date: "",
-    category: categories[0], // Default to the first built-in category
+    date: new Date().toISOString().split("T")[0], // Default to today's date
+    category: "",
     amount: "",
     tags: [],
     notes: "",
@@ -30,12 +31,12 @@ const IncomeModal = ({ open, onClose, onSave, income }) => {
     if (income) {
       setForm({
         ...income,
-        tags: Array.isArray(income.tags) ? income.tags : [],
+        amount: income.amount.toString(), // Ensure amount is treated as string for the input
       });
     } else {
       setForm({
-        date: "",
-        category: categories[0], // Default to the first built-in category
+        date: new Date().toISOString().split("T")[0], // Default to today's date
+        category: "",
         amount: "",
         tags: [],
         notes: "",
@@ -44,14 +45,24 @@ const IncomeModal = ({ open, onClose, onSave, income }) => {
   }, [income]);
 
   const handleChange = (field, value) => {
-    if (field === "tags") {
-      value = Array.isArray(value) ? value : value.split(",");
-    }
-    setForm((prevForm) => ({ ...prevForm, [field]: value }));
+    setForm((prevForm) => ({
+      ...prevForm,
+      [field]: field === "amount" ? parseFloat(value) : value,
+    }));
+  };
+
+  const handleTagChange = (e) => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      tags: e.target.value,
+    }));
   };
 
   const handleSave = () => {
-    onSave(form);
+    onSave({
+      ...form,
+      amount: parseFloat(form.amount), // Ensure amount is a number on save
+    });
     onClose();
   };
 
@@ -97,7 +108,7 @@ const IncomeModal = ({ open, onClose, onSave, income }) => {
           select
           label="Tags"
           value={form.tags}
-          onChange={(e) => handleChange("tags", e.target.value)}
+          onChange={handleTagChange}
           fullWidth
           margin="normal"
           variant="outlined"

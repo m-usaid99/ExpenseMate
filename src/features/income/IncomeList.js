@@ -15,7 +15,7 @@ import { Edit, Delete, AttachMoney, Computer, LocalAtm, Category } from "@mui/ic
 const categoryIcons = {
   Salary: <AttachMoney />,
   Freelance: <Computer />,
-  Investments: <LocalAtm />,
+  Investment: <LocalAtm />,
   Other: <Category />,
 };
 

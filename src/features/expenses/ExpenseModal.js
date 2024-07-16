@@ -29,7 +29,7 @@ const tags = ["Monthly", "One-time", "Recurring"];
 
 const ExpenseModal = ({ open, onClose, onSave, expense }) => {
   const [form, setForm] = useState({
-    date: "",
+    date: new Date().toISOString().split("T")[0],
     category: "",
     amount: "",
     tags: "",
@@ -44,7 +44,7 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
       });
     } else {
       setForm({
-        date: "",
+        date: new Date().toISOString().split("T")[0],
         category: "",
         amount: "",
         tags: "",
