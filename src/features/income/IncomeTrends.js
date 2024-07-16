@@ -29,6 +29,7 @@ const IncomeTrends = ({ data }) => {
                 label: "Income",
                 borderColor: theme.palette.primary.main,
                 backgroundColor: theme.palette.secondary.main,
+                color: theme.palette.primary.main
               },
             ]}
             xAxis={[{ data: labels, scaleType: "point" }]}

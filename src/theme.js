@@ -5,24 +5,24 @@ const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: themeJson.schemes.light.primary,
-      contrastText: themeJson.schemes.light.onPrimary,
+      main: themeJson.schemes.light.primary,  // #595992
+      contrastText: themeJson.schemes.light.onPrimary,  // #FFFFFF
     },
     secondary: {
-      main: themeJson.schemes.light.secondary,
-      contrastText: themeJson.schemes.light.onSecondary,
+      main: themeJson.schemes.light.secondary, // #5D5C71 
+      contrastText: themeJson.schemes.light.onSecondary, // #FFFFFF
     },
     background: {
-      default: themeJson.schemes.light.background,
-      paper: themeJson.schemes.light.surface,
+      default: "#FFFFFF",      
+      paper: themeJson.schemes.light.surface, // #FCF8FF
     },
     text: {
-      primary: themeJson.schemes.light.onBackground,
-      secondary: themeJson.schemes.light.onSurface,
+      primary: themeJson.schemes.light.onBackground, // #1B1B21
+      secondary: themeJson.schemes.light.onSurface, // #1B1B21
     },
     error: {
-      main: themeJson.schemes.light.error,
-      contrastText: themeJson.schemes.light.onError,
+      main: themeJson.schemes.light.error, // #BA1A1A
+      contrastText: themeJson.schemes.light.onError, //#FFFFFF
     },
   },
   typography: {

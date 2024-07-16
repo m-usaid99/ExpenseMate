@@ -1,5 +1,5 @@
 // src/components/NavBar.js
-import React from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -12,9 +12,11 @@ import {
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Logout from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
+import SettingsModal from "./SettingsModal"; // Adjust the import path accordingly
 
 const NavBar = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -24,60 +26,72 @@ const NavBar = () => {
     setAnchorEl(null);
   };
 
+  const handleSettingsOpen = () => {
+    setSettingsOpen(true);
+    handleMenuClose();
+  };
+
+  const handleSettingsClose = () => {
+    setSettingsOpen(false);
+  };
+
   const handleLogout = () => {
     // Add logout logic here
     setAnchorEl(null);
   };
 
   return (
-    <AppBar
-      position="fixed"
-      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-    >
-      <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          ExpenseMate
-        </Typography>
-        <IconButton
-          edge="end"
-          color="inherit"
-          aria-label="profile"
-          aria-controls="profile-menu"
-          aria-haspopup="true"
-          onClick={handleMenuOpen}
-        >
-          <AccountCircle />
-        </IconButton>
-        <Menu
-          id="profile-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-          sx={{
-            "& .MuiPaper-root": {
-              width: "200px", // Adjust the width as needed
-              transform: "translateX(-20px)", // Adjust the position as needed
-            },
-          }}
-        >
-          <MenuItem component={Link} to="/profile">
-            Profile
-          </MenuItem>
-          <MenuItem component={Link} to="/settings">
-            Settings
-          </MenuItem>
-          <MenuItem>
-            <Button
-              startIcon={<Logout />}
-              onClick={handleLogout}
-              sx={{ width: "100%", justifyContent: "flex-start" }}
-            >
-              Logout
-            </Button>
-          </MenuItem>
-        </Menu>
-      </Toolbar>
-    </AppBar>
+    <>
+      <AppBar
+        position="fixed"
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            ExpenseMate
+          </Typography>
+          <IconButton
+            edge="end"
+            color="inherit"
+            aria-label="profile"
+            aria-controls="profile-menu"
+            aria-haspopup="true"
+            onClick={handleMenuOpen}
+          >
+            <AccountCircle />
+          </IconButton>
+          <Menu
+            id="profile-menu"
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+            sx={{
+              "& .MuiPaper-root": {
+                width: "200px", // Adjust the width as needed
+                transform: "translateX(-20px)", // Adjust the position as needed
+              },
+            }}
+          >
+            <MenuItem component={Link} to="/profile">
+              Profile
+            </MenuItem>
+            <MenuItem onClick={handleSettingsOpen}>
+              Settings
+            </MenuItem>
+            <MenuItem>
+              <Button
+                startIcon={<Logout />}
+                onClick={handleLogout}
+                sx={{ width: "100%", justifyContent: "flex-start" }}
+              >
+                Logout
+              </Button>
+            </MenuItem>
+          </Menu>
+        </Toolbar>
+      </AppBar>
+      <SettingsModal open={settingsOpen} handleClose={handleSettingsClose} />
+    </>
   );
 };
 

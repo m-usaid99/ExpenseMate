@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Typography, Container, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { addIncome, editIncome, deleteIncome, selectRecentIncome, selectTotalIncome, selectIncomeTrendsData } from "./incomeSlice";

@@ -101,6 +101,7 @@ const ExpensesPage = () => {
             filters={filters}
             onFilterChange={handleFilterChange}
             handleAddExpense={handleAddExpense}
+            handleResetFilters={handleResetFilters}
           />
         </Box>
         <ExpenseList
