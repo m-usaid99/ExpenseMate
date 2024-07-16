@@ -7,25 +7,21 @@ import {
   TextField,
   Button,
   MenuItem,
-  FormControlLabel,
-  Checkbox,
 } from "@mui/material";
 
 const categories = [
   "Food",
   "Rent",
   "Utilities",
-  "Entertainment",
   "Transportation",
+  "Entertainment",
   "Healthcare",
   "Education",
+  "Commute",
   "Insurance",
-  "Clothing",
-  "Savings",
+  "Shopping",
   "Travel",
-  "Household",
-  "Gifts",
-  "Dining Out",
+  "Grocery",
   "Miscellaneous",
 ];
 
@@ -36,9 +32,8 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
     date: "",
     category: "",
     amount: "",
-    tags: [],
+    tags: "",
     notes: "",
-    isRecurring: false,
   });
 
   useEffect(() => {
@@ -52,9 +47,8 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
         date: "",
         category: "",
         amount: "",
-        tags: [],
+        tags: "",
         notes: "",
-        isRecurring: false,
       });
     }
   }, [expense]);
@@ -63,13 +57,6 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
     setForm((prevForm) => ({
       ...prevForm,
       [field]: field === "amount" ? parseFloat(value) : value,
-    }));
-  };
-
-  const handleTagChange = (e) => {
-    setForm((prevForm) => ({
-      ...prevForm,
-      tags: e.target.value,
     }));
   };
 
@@ -123,11 +110,10 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
           select
           label="Tags"
           value={form.tags}
-          onChange={handleTagChange}
+          onChange={(e) => handleChange("tags", e.target.value)}
           fullWidth
           margin="normal"
           variant="outlined"
-          SelectProps={{ multiple: true }}
         >
           {tags.map((tag) => (
             <MenuItem key={tag} value={tag}>
@@ -142,15 +128,6 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
           fullWidth
           margin="normal"
           variant="outlined"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={form.isRecurring}
-              onChange={(e) => handleChange("isRecurring", e.target.checked)}
-            />
-          }
-          label="Recurring"
         />
       </DialogContent>
       <DialogActions>

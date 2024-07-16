@@ -1,26 +1,29 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Box } from '@mui/material';
-import { Edit, Delete } from '@mui/icons-material';
-import { Category, Fastfood, Home, Payment, DirectionsCar } from '@mui/icons-material';
+import { Edit, Delete, LocalHospital, Commute, LocalDining, School, Movie, ShoppingCart } from '@mui/icons-material';
+import { Category, Fastfood, Home, Payment, DirectionsCar, Flight } from '@mui/icons-material';
 
 const categoryIcons = {
   Food: <Fastfood />,
   Rent: <Home />,
   Utilities: <Payment />,
   Transportation: <DirectionsCar />,
-  Entertainment: <Category />,
-  Healthcare: <Category />,
-  Education: <Category />,
-  Shopping: <Category />,
-  Travel: <Category />,
+  Entertainment: <Movie />,
+  Healthcare: <LocalHospital />,
+  Education: <School />,
+  Commute: <Commute />,
+  Insurance: <Category />,
+  Shopping: <ShoppingCart />,
+  Travel: <Flight />,
+  Groceries: <LocalDining />,
   Miscellaneous: <Category />
 };
 
 const ExpenseList = ({ expenses, onEdit, onDelete }) => {
   return (
-    <Box sx={{ display: 'flex', marginTop: 4 }}>
-      <TableContainer component={Paper} sx={{ width: '100%' }}>
-        <Table>
+    <Box sx={{ display: 'flex', marginTop: 2 }}>
+      <TableContainer component={Paper} sx={{ width: '100%', maxHeight: 400, overflow: 'auto' }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell>Date</TableCell>
