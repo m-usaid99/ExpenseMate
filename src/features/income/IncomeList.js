@@ -21,9 +21,9 @@ const categoryIcons = {
 
 const IncomeList = ({ income, onEdit, onDelete }) => {
   return (
-    <Box sx={{ display: "flex", justifyContent: "flex-start", marginTop: 2 }}>
+    <Box sx={{ display: "flex", marginTop: 2 }}>
       <TableContainer component={Paper} sx={{ width: "100%", maxHeight: 400, overflow: 'auto' }}>
-        <Table>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell>Date</TableCell>

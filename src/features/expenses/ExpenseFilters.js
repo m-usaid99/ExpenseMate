@@ -19,7 +19,7 @@ const categories = [
 
 const tags = ["Monthly", "One-time", "Recurring"];
 
-const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense }) => {
+const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense, handleResetFilters }) => {
   const handleCategoryChange = (e) => {
     onFilterChange("category", e.target.value);
   };
@@ -85,6 +85,24 @@ const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense }) => {
           </TextField>
         </Grid>
         <Grid item xs={12} sm={3} md={2}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginRight: "10px",
+            }}
+          >
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleResetFilters}
+              sx={{ whiteSpace: "nowrap" }}
+            >
+              Reset Filters
+            </Button>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={3} md={6}>
           <Box
             sx={{
               display: "flex",

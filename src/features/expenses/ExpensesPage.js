@@ -58,6 +58,10 @@ const ExpensesPage = () => {
     setIsModalOpen(false);
   };
 
+  const handleResetFilters = () => {
+    setFilters({category: '', tags: []});
+  };
+
   const filteredExpenses = recentExpenses.filter((expense) => {
     const matchesCategory = filters.category.length
       ? filters.category.includes(expense.category)

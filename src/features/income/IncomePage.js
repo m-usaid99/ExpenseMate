@@ -16,8 +16,7 @@ const IncomePage = () => {
   const totalIncome = useSelector(selectTotalIncome);
   const incomeTrendsData = useSelector(selectIncomeTrendsData);
   const [filters, setFilters] = useState({
-    search: "",
-    category: "",
+    category: [],
     tags: [],
   }); // Ensure tags is an array
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,9 +49,19 @@ const IncomePage = () => {
     setIsModalOpen(false);
   };
 
-  useEffect(() => {
-    console.log(filters); // Debugging output
-  }, [filters]);
+  const handleResetFilters = () => {
+    setFilters({ category: '', tags: [] });
+  };
+
+  const filteredIncome = recentIncome.filter((income) => {
+    const matchesCategory = filters.category.length 
+      ? filters.category.includes(income.category)
+      : true;
+    const matchesTags = filters.tags.length
+      ? filters.tags.some((tag) => income.tags.includes(tag))
+      : true;
+    return matchesCategory && matchesTags;
+  })
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -83,10 +92,11 @@ const IncomePage = () => {
             filters={filters}
             onFilterChange={handleFilterChange}
             handleAddIncome={handleAddIncome}
+            handleResetFilters={handleResetFilters}
           />
         </Box>
         <IncomeList
-          income={recentIncome}
+          income={filteredIncome}
           onEdit={handleEditIncome}
           onDelete={handleDeleteIncome}
         />
