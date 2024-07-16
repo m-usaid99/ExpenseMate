@@ -1,5 +1,5 @@
-import React from 'react';
-import { Typography, Paper } from '@mui/material';
+import React from "react";
+import { Typography, Paper } from "@mui/material";
 
 const ExpenseSummary = ({ totalExpenses }) => {
   return (

@@ -20,6 +20,14 @@ const categories = [
 const tags = ["Monthly", "One-time", "Recurring"];
 
 const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense }) => {
+  const handleCategoryChange = (e) => {
+    onFilterChange("category", e.target.value);
+  };
+
+  const handleTagChange = (e) => {
+    onFilterChange("tags", e.target.value);
+  };
+
   return (
     <Box sx={{ marginBottom: 3 }}>
       <Grid container spacing={2} alignItems="center">
@@ -28,10 +36,19 @@ const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense }) => {
             select
             label="Category"
             value={filters.category}
-            onChange={(e) => onFilterChange("category", e.target.value)}
+            onChange={handleCategoryChange}
             variant="outlined"
             fullWidth
             size="small"
+            SelectProps={{
+              MenuProps: {
+                PaperProps: {
+                  style: {
+                    maxHeight: 200, // Adjust the height as needed
+                  },
+                },
+              },
+            }}
           >
             {categories.map((category) => (
               <MenuItem key={category} value={category}>
@@ -45,11 +62,20 @@ const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense }) => {
             select
             label="Tags"
             value={filters.tags}
-            onChange={(e) => onFilterChange("tags", e.target.value)}
+            onChange={handleTagChange}
             variant="outlined"
             fullWidth
             size="small"
-            SelectProps={{ multiple: true }}
+            SelectProps={{
+              multiple: true,
+              MenuProps: {
+                PaperProps: {
+                  style: {
+                    maxHeight: 200, // Adjust the height as needed
+                  },
+                },
+              },
+            }}
           >
             {tags.map((tag) => (
               <MenuItem key={tag} value={tag}>
