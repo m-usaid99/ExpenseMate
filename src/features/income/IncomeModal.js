@@ -13,7 +13,6 @@ const categories = [
   "Salary",
   "Freelance",
   "Investments",
-  "Loyalty",
   "Other"
 ];
 const tags = ["Monthly", "One-time", "Recurring"];

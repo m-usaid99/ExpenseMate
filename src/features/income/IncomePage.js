@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Container, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { addIncome, editIncome, deleteIncome, selectRecentIncome, selectTotalIncome } from "./incomeSlice";
+import { addIncome, editIncome, deleteIncome, selectRecentIncome, selectTotalIncome, selectIncomeTrendsData } from "./incomeSlice";
 import IncomeList from "./IncomeList";
 import IncomeFilters from "./IncomeFilters";
 import IncomeModal from "./IncomeModal";
 import Layout from "../../components/Layout";
 import IncomeSummary from "./IncomeSummary";
+import IncomeTrends from "./IncomeTrends";
 
 const IncomePage = () => {
   const dispatch = useDispatch();
-  const { income, loading, error } = useSelector((state) => state.income);
+  const { loading, error } = useSelector((state) => state.income);
   const recentIncome = useSelector(selectRecentIncome);
   const totalIncome = useSelector(selectTotalIncome);
+  const incomeTrendsData = useSelector(selectIncomeTrendsData);
   const [filters, setFilters] = useState({
     search: "",
     category: "",
@@ -73,9 +75,9 @@ const IncomePage = () => {
         <Box sx={{ marginBottom: 4 }}>
           <IncomeSummary totalIncome={totalIncome} />
         </Box>
-        {/* <Box sx={{ marginBottom: 4 }}>
-          <ExpenseTrends data={expenseTrendsData} />
-        </Box> */}
+        <Box sx={{ marginBottom: 4 }}>
+          <IncomeTrends data={incomeTrendsData} />
+        </Box> 
         <Box sx={{ marginBottom: 4 }}>
           <IncomeFilters
             filters={filters}

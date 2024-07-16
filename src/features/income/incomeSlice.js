@@ -28,7 +28,6 @@ const initialState = {
     { id: 17, date: "2024-05-15", category: "Freelance", amount: 800, tags: ["One-time"], notes: "" },
     { id: 18, date: "2024-06-05", category: "Investment", amount: 1400, tags: ["Quarterly"], notes: "Bond interest" },
     { id: 19, date: "2024-01-05", category: "Rental Income", amount: 1200, tags: ["Monthly"], notes: "Rental payment" },
-    { id: 20, date: "2024-02-20", category: "Royalty", amount: 500, tags: ["Quarterly"], notes: "Book royalties" },
     { id: 21, date: "2024-03-12", category: "Salary", amount: 3100, tags: ["Monthly"], notes: "" },
     { id: 22, date: "2024-04-18", category: "Freelance", amount: 900, tags: ["One-time"], notes: "" },
     { id: 23, date: "2024-05-30", category: "Investment", amount: 1700, tags: ["Quarterly"], notes: "Mutual fund returns" },

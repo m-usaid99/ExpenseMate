@@ -10,15 +10,13 @@ import {
   IconButton,
   Box,
 } from "@mui/material";
-import { Edit, Delete } from "@mui/icons-material";
-import { Payment, Category } from "@mui/icons-material"; // Example icons
+import { Edit, Delete, AttachMoney, Computer, LocalAtm, Category } from "@mui/icons-material";
 
 const categoryIcons = {
-  Salary: <Payment />,
-  Freelance: <Category />,
-  Investments: <Category />,
+  Salary: <AttachMoney />,
+  Freelance: <Computer />,
+  Investments: <LocalAtm />,
   Other: <Category />,
-  Miscellaneous: <Category />,
 };
 
 const IncomeList = ({ income, onEdit, onDelete }) => {
