@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Container, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { addExpense, editExpense, deleteExpense } from './expensesSlice';
+import { addExpense, editExpense, deleteExpense, selectRecentExpenses } from './expensesSlice';
 import ExpenseList from './ExpenseList';
 import ExpenseFilters from './ExpenseFilters';
 import ExpenseModal from './ExpenseModal';
@@ -14,6 +14,7 @@ const ExpensesPage = () => {
   const dispatch = useDispatch();
   const { expenses, loading, error } = useSelector((state) => state.expenses);
   const totalExpenses = useSelector(selectTotalExpenses);
+  const recentExpenses = useSelector(selectRecentExpenses);
   const expenseTrendsData = useSelector(selectExpenseTrendsData);
   const [filters, setFilters] = useState({ category: '', tags: [] });
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,9 +56,11 @@ const ExpensesPage = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+
+
   return (
     <Layout>
-      <Container maxWidth="lg" sx={{ paddingTop: 4, paddingBottom: 4 }}>
+      <Container maxWidth="lg" sx={{ paddingTop: 4, paddingBottom: 4, display: 'flex', flexDirection: 'column', marginLeft: 0 }}>
         <Typography variant="h4" gutterBottom>
           Expenses
         </Typography>
@@ -70,7 +73,7 @@ const ExpensesPage = () => {
         <Box sx={{ marginBottom: 4 }}>
           <ExpenseFilters filters={filters} onFilterChange={handleFilterChange} handleAddExpense={handleAddExpense} />
         </Box>
-        <ExpenseList expenses={expenses} onEdit={handleEditExpense} onDelete={handleDeleteExpense} />
+        <ExpenseList expenses={recentExpenses} onEdit={handleEditExpense} onDelete={handleDeleteExpense} />
         <ExpenseModal
           open={isModalOpen}
           onClose={() => setIsModalOpen(false)}

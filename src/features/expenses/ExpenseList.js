@@ -18,8 +18,8 @@ const categoryIcons = {
 
 const ExpenseList = ({ expenses, onEdit, onDelete }) => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-      <TableContainer component={Paper} sx={{ width: '90%' }}>
+    <Box sx={{ display: 'flex', marginTop: 4 }}>
+      <TableContainer component={Paper} sx={{ width: '100%' }}>
         <Table>
           <TableHead>
             <TableRow>
