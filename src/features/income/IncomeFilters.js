@@ -2,7 +2,7 @@ import React from "react";
 import { Box, TextField, MenuItem, Button, Grid } from "@mui/material";
 
 const categories = ["Salary", "Freelance", "Investments", "Other"];
-const tags = ["Monthly", "One-time", "Recurring"];
+const tags = ["Monthly", "One-time", "Quarterly"];
 
 const IncomeFilters = ({ filters, onFilterChange, handleAddIncome }) => {
   const handleTagsChange = (e) => {
@@ -16,16 +16,6 @@ const IncomeFilters = ({ filters, onFilterChange, handleAddIncome }) => {
   return (
     <Box sx={{ mb: 3 }}>
       <Grid container spacing={2} alignItems="center">
-        <Grid item xs={12} sm={3} md={2}>
-          <TextField
-            label="Search"
-            value={filters.search}
-            onChange={(e) => onFilterChange("search", e.target.value)}
-            variant="outlined"
-            fullWidth
-            size="small"
-          />
-        </Grid>
         <Grid item xs={12} sm={3} md={2}>
           <TextField
             select

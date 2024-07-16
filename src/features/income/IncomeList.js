@@ -18,17 +18,13 @@ const categoryIcons = {
   Freelance: <Category />,
   Investments: <Category />,
   Other: <Category />,
-  Healthcare: <Category />,
-  Education: <Category />,
-  Shopping: <Category />,
-  Travel: <Category />,
   Miscellaneous: <Category />,
 };
 
 const IncomeList = ({ income, onEdit, onDelete }) => {
   return (
     <Box sx={{ display: "flex", justifyContent: "flex-start", marginTop: 2 }}>
-      <TableContainer component={Paper} sx={{ width: "80%" }}>
+      <TableContainer component={Paper} sx={{ width: "100%", maxHeight: 400, overflow: 'auto' }}>
         <Table>
           <TableHead>
             <TableRow>

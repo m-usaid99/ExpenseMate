@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Typography } from "@mui/material";
+import { Typography, Container, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { addIncome, editIncome, deleteIncome } from "./incomeSlice";
+import { addIncome, editIncome, deleteIncome, selectRecentIncome, selectTotalIncome } from "./incomeSlice";
 import IncomeList from "./IncomeList";
 import IncomeFilters from "./IncomeFilters";
 import IncomeModal from "./IncomeModal";
 import Layout from "../../components/Layout";
+import IncomeSummary from "./IncomeSummary";
 
 const IncomePage = () => {
   const dispatch = useDispatch();
   const { income, loading, error } = useSelector((state) => state.income);
+  const recentIncome = useSelector(selectRecentIncome);
+  const totalIncome = useSelector(selectTotalIncome);
   const [filters, setFilters] = useState({
     search: "",
     category: "",
@@ -54,25 +57,44 @@ const IncomePage = () => {
 
   return (
     <Layout>
-      <Typography variant="h4" gutterBottom>
-        Income
-      </Typography>
-      <IncomeFilters
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        handleAddIncome={handleAddIncome}
-      />
-      <IncomeList
-        income={income}
-        onEdit={handleEditIncome}
-        onDelete={handleDeleteIncome}
-      />
-      <IncomeModal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleSaveIncome}
-        income={selectedIncome}
-      />
+      <Container
+        maxWidth="lg"
+        sx={{
+          paddingTop: 4,
+          paddingBottom: 4,
+          display: "flex",
+          flexDirection: "column",
+          marginLeft: 0,
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Income 
+        </Typography>
+        <Box sx={{ marginBottom: 4 }}>
+          <IncomeSummary totalIncome={totalIncome} />
+        </Box>
+        {/* <Box sx={{ marginBottom: 4 }}>
+          <ExpenseTrends data={expenseTrendsData} />
+        </Box> */}
+        <Box sx={{ marginBottom: 4 }}>
+          <IncomeFilters
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            handleAddIncome={handleAddIncome}
+          />
+        </Box>
+        <IncomeList
+          income={recentIncome}
+          onEdit={handleEditIncome}
+          onDelete={handleDeleteIncome}
+        />
+        <IncomeModal
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSaveIncome}
+          income={selectedIncome}
+        />
+      </Container>
     </Layout>
   );
 };
