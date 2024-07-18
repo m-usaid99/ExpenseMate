@@ -21,7 +21,13 @@ const ExpensesPage = () => {
   const totalExpenses = useSelector(selectTotalExpenses);
   const recentExpenses = useSelector(selectRecentExpenses);
   const expenseTrendsData = useSelector(selectExpenseTrendsData);
-  const [filters, setFilters] = useState({ category: [], tags: [] });
+  const [filters, setFilters] = useState({
+    category: "",
+    tags: "",
+    startDate: null,
+    endDate: null,
+    amountRange: [0, 10000],
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
 
@@ -59,17 +65,38 @@ const ExpensesPage = () => {
   };
 
   const handleResetFilters = () => {
-    setFilters({category: '', tags: []});
+    setFilters({
+      category: "",
+      tags: "",
+      startDate: null,
+      endDate: null,
+      amountRange: [0, 10000],
+    });
   };
 
   const filteredExpenses = recentExpenses.filter((expense) => {
-    const matchesCategory = filters.category.length
-      ? filters.category.includes(expense.category)
+    const matchesCategory = filters.category
+      ? expense.category === filters.category
       : true;
-    const matchesTags = filters.tags.length
-      ? filters.tags.some((tag) => expense.tags.includes(tag))
+    const matchesTags = filters.tags
+      ? expense.tags === filters.tags
       : true;
-    return matchesCategory && matchesTags;
+    const matchesStartDate = filters.startDate
+      ? new Date(expense.date) >= new Date(filters.startDate)
+      : true;
+    const matchesEndDate = filters.endDate
+      ? new Date(expense.date) <= new Date(filters.endDate)
+      : true;
+    const matchesAmountRange =
+      expense.amount >= filters.amountRange[0] &&
+      expense.amount <= filters.amountRange[1];
+    return (
+      matchesCategory &&
+      matchesTags &&
+      matchesStartDate &&
+      matchesEndDate &&
+      matchesAmountRange
+    );
   });
 
   if (loading) return <div>Loading...</div>;
