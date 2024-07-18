@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { Typography, Container, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { addIncome, editIncome, deleteIncome, selectRecentIncome, selectTotalIncome, selectIncomeTrendsData } from "./incomeSlice";
+import {
+  addIncome,
+  editIncome,
+  deleteIncome,
+  selectRecentIncome,
+  selectTotalIncome,
+  selectIncomeTrendsData,
+} from "./incomeSlice";
 import IncomeList from "./IncomeList";
 import IncomeFilters from "./IncomeFilters";
 import IncomeModal from "./IncomeModal";
@@ -15,10 +22,14 @@ const IncomePage = () => {
   const recentIncome = useSelector(selectRecentIncome);
   const totalIncome = useSelector(selectTotalIncome);
   const incomeTrendsData = useSelector(selectIncomeTrendsData);
+  const maxIncome = Math.max(...recentIncome.map((inc) => inc.amount), 0);
   const [filters, setFilters] = useState({
-    category: [],
-    tags: [],
-  }); // Ensure tags is an array
+    category: "",
+    tags: "",
+    startDate: null,
+    endDate: null,
+    amountRange: [0, maxIncome],
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedIncome, setSelectedIncome] = useState(null);
 
@@ -50,18 +61,37 @@ const IncomePage = () => {
   };
 
   const handleResetFilters = () => {
-    setFilters({ category: '', tags: [] });
+    setFilters({
+      category: "",
+      tags: "",
+      startDate: null,
+      endDate: null,
+      amountRange: [0, maxIncome],
+    });
   };
 
   const filteredIncome = recentIncome.filter((income) => {
-    const matchesCategory = filters.category.length 
-      ? filters.category.includes(income.category)
+    const matchesCategory = filters.category
+      ? income.category === filters.category
       : true;
-    const matchesTags = filters.tags.length
-      ? filters.tags.some((tag) => income.tags.includes(tag))
+    const matchesTags = filters.tags ? income.tags === filters.tags : true;
+    const matchesStartDate = filters.startDate
+      ? new Date(income.date) >= new Date(filters.startDate)
       : true;
-    return matchesCategory && matchesTags;
-  })
+    const matchesEndDate = filters.endDate
+      ? new Date(income.date) <= new Date(filters.endDate)
+      : true;
+    const matchesAmountRange =
+      income.amount >= filters.amountRange[0] &&
+      income.amount <= filters.amountRange[1];
+    return (
+      matchesCategory &&
+      matchesTags &&
+      matchesStartDate &&
+      matchesEndDate &&
+      matchesAmountRange
+    );
+  });
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -79,14 +109,14 @@ const IncomePage = () => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          Income 
+          Income
         </Typography>
         <Box sx={{ marginBottom: 4 }}>
           <IncomeSummary totalIncome={totalIncome} />
         </Box>
         <Box sx={{ marginBottom: 4 }}>
           <IncomeTrends data={incomeTrendsData} />
-        </Box> 
+        </Box>
         <Box sx={{ marginBottom: 4 }}>
           <IncomeFilters
             filters={filters}
