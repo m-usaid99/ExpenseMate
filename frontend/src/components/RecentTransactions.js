@@ -22,7 +22,7 @@ const RecentTransactions = () => {
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return (
-    <Box sx={{ mt: 6, maxHeight: 500, overflowY: 'auto' }}>
+    <Box sx={{ mt: 6, maxHeight: 400, overflowY: 'auto' }}>
       <Typography variant="h6">Recent Transactions</Typography>
       <List>
         {transactions.map((transaction) => (
@@ -44,7 +44,7 @@ const RecentTransactions = () => {
                     </Typography>
                     {transaction.tags && transaction.tags.length > 0 && (
                       <Typography component="span" variant="body2" color="textSecondary">
-                        {`  |  Tags: ${transaction.tags.join(', ')}`}
+                        {`  |  Tag: ${transaction.tags}`}
                       </Typography>
                     )}
                     {transaction.notes && (

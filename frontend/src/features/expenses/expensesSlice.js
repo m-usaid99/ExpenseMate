@@ -14,7 +14,7 @@ const initialState = {
       date: "2023-01-15",
       category: "Utilities",
       amount: 100,
-      tags: ["Monthly"],
+      tags: "Monthly",
       notes: "",
     },
     {
@@ -22,7 +22,7 @@ const initialState = {
       date: "2023-02-20",
       category: "Food",
       amount: 200,
-      tags: ["Monthly"],
+      tags: "Monthly",
       notes: "",
     },
     {
@@ -30,7 +30,7 @@ const initialState = {
       date: "2023-03-05",
       category: "Entertainment",
       amount: 150,
-      tags: ["One-time"],
+      tags: "One-time",
       notes: "Concert tickets",
     },
     {
@@ -38,7 +38,7 @@ const initialState = {
       date: "2023-04-10",
       category: "Transportation",
       amount: 300,
-      tags: ["Monthly"],
+      tags: "Monthly",
       notes: "Car maintenance",
     },
     {
@@ -46,7 +46,7 @@ const initialState = {
       date: "2023-05-25",
       category: "Rent",
       amount: 500,
-      tags: ["Monthly"],
+      tags: "Monthly",
       notes: "",
     },
     {
@@ -54,7 +54,7 @@ const initialState = {
       date: "2023-06-15",
       category: "Utilities",
       amount: 120,
-      tags: ["Monthly"],
+      tags: "Monthly",
       notes: "",
     },
     {
@@ -62,7 +62,7 @@ const initialState = {
       date: "2023-07-02",
       category: "Rent",
       amount: 500,
-      tags: ["Monthly"],
+      tags: "Monthly",
       notes: "",
     },
     {
@@ -70,7 +70,7 @@ const initialState = {
       date: "2023-08-03",
       category: "Food",
       amount: 180,
-      tags: ["Monthly"],
+      tags: "Monthly",
       notes: "",
     },
     {
@@ -78,7 +78,7 @@ const initialState = {
       date: "2023-09-10",
       category: "Entertainment",
       amount: 250,
-      tags: ["One-time"],
+      tags: "One-time",
       notes: "Theater tickets",
     },
     {
@@ -86,7 +86,7 @@ const initialState = {
       date: "2023-10-12",
       category: "Transportation",
       amount: 400,
-      tags: ["Monthly"],
+      tags: "Monthly",
       notes: "Public transport pass",
     },
     {
@@ -94,7 +94,7 @@ const initialState = {
       date: "2023-11-18",
       category: "Healthcare",
       amount: 200,
-      tags: ["One-time"],
+      tags: "One-time",
       notes: "Medical check-up",
     },
     {
@@ -102,7 +102,7 @@ const initialState = {
       date: "2023-12-22",
       category: "Shopping",
       amount: 300,
-      tags: ["One-time"],
+      tags: "One-time",
       notes: "Holiday gifts",
     },
     {
@@ -110,7 +110,7 @@ const initialState = {
       date: "2024-01-05",
       category: "Travel",
       amount: 800,
-      tags: ["One-time"],
+      tags: "One-time",
       notes: "Vacation",
     },
     {
@@ -118,7 +118,7 @@ const initialState = {
       date: "2024-02-14",
       category: "Education",
       amount: 150,
-      tags: ["Monthly"],
+      tags: "Monthly",
       notes: "Online course",
     },
     {
@@ -126,7 +126,7 @@ const initialState = {
       date: "2024-03-08",
       category: "Food",
       amount: 220,
-      tags: ["Monthly"],
+      tags: "Monthly",
       notes: "",
     },
     {
@@ -134,7 +134,7 @@ const initialState = {
       date: "2024-04-16",
       category: "Rent",
       amount: 550,
-      tags: ["Monthly"],
+      tags: "Monthly",
       notes: "",
     },
     {
@@ -142,7 +142,7 @@ const initialState = {
       date: "2024-05-10",
       category: "Utilities",
       amount: 130,
-      tags: ["Monthly"],
+      tags: "Monthly",
       notes: "",
     },
     {
@@ -150,7 +150,7 @@ const initialState = {
       date: "2024-06-18",
       category: "Entertainment",
       amount: 300,
-      tags: ["One-time"],
+      tags: "One-time",
       notes: "Concert tickets",
     },
   ],

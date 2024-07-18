@@ -23,7 +23,7 @@ const IncomeModal = ({ open, onClose, onSave, income }) => {
     date: new Date().toISOString().split("T")[0], // Default to today's date
     category: "",
     amount: "",
-    tags: [],
+    tags: "",
     notes: "",
   });
 
@@ -38,7 +38,7 @@ const IncomeModal = ({ open, onClose, onSave, income }) => {
         date: new Date().toISOString().split("T")[0], // Default to today's date
         category: "",
         amount: "",
-        tags: [],
+        tags: "", 
         notes: "",
       });
     }
@@ -112,7 +112,6 @@ const IncomeModal = ({ open, onClose, onSave, income }) => {
           fullWidth
           margin="normal"
           variant="outlined"
-          SelectProps={{ multiple: true }}
         >
           {tags.map((tag) => (
             <MenuItem key={tag} value={tag}>

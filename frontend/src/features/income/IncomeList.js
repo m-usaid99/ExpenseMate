@@ -44,7 +44,7 @@ const IncomeList = ({ income, onEdit, onDelete }) => {
                   {inc.category}
                 </TableCell>
                 <TableCell>{inc.amount}</TableCell>
-                <TableCell>{inc.tags.join(", ")}</TableCell>
+                <TableCell>{inc.tags}</TableCell>
                 <TableCell>{inc.notes}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => onEdit(inc)}>

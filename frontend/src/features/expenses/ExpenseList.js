@@ -29,7 +29,7 @@ const ExpenseList = ({ expenses, onEdit, onDelete }) => {
               <TableCell>Date</TableCell>
               <TableCell>Category</TableCell>
               <TableCell>Amount</TableCell>
-              <TableCell>Tags</TableCell>
+              <TableCell>Tag</TableCell>
               <TableCell>Notes</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
@@ -42,7 +42,7 @@ const ExpenseList = ({ expenses, onEdit, onDelete }) => {
                   {categoryIcons[expense.category] || categoryIcons['Miscellaneous']} {expense.category}
                 </TableCell>
                 <TableCell>{expense.amount}</TableCell>
-                <TableCell>{expense.tags.join(', ')}</TableCell>
+                <TableCell>{expense.tags}</TableCell>
                 <TableCell>{expense.notes}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => onEdit(expense)}>
