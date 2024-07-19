@@ -6,7 +6,7 @@ const {
   getUserProfile,
   updateUserProfile,
 } = require('../controllers/userController');
-const { protect } = require('')
+const { protect } = require('../middleware/authMiddleware');
 
 router.post('/register', registerUser);
 router.post('/login', authUser);
