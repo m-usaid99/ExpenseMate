@@ -112,11 +112,37 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Update user settings
+// @route   PUT /api/users/settings
+// @access  Private
+const updateUserSettings = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.settings.theme = req.body.theme || user.settings.theme;
+    user.settings.currency = req.body.currency || user.settings.currency;
+    user.settings.notifications = req.body.notifications || user.settings.notifications;
+
+    const updatedUser = await user.save();
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      settings: updatedUser.settings,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
 module.exports = {
   registerUser,
   authUser,
   getUserProfile,
   updateUserProfile,
+  updateUserSettings,
 };
 
 
