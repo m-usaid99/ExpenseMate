@@ -1,26 +1,20 @@
 const express = require('express');
-const cors = require('cors');
-const userRoutes = require('./routes/userRoutes');
-const incomeRoutes = require('./routes/incomeRoutes');
-const expenseRoutes = require('./routes/expenseRoutes');
-const budgetRoutes = require('./routes/budgetRoutes');
-const { errorHandler } = require('./middleware/errorMiddleware');
+const morgan = require('morgan');
+const connectDB = require('./config/db');
 
 const app = express();
 
-app.use(cors());
+// Middleware
 app.use(express.json());
+app.use(morgan('dev'));
 
+// Routes
+const userRoutes = require('./routes/userRoutes');
 app.use('/api/users', userRoutes);
-app.use('/api/income', incomeRoutes);
-app.use('/api/expense', expenseRoutes);
-app.use('/api/budgets', budgetRoutes);
 
-app.get('/', (req, res) => {
-  res.send('API is running...');
-});
-
-// Error handling middleware should be defined after all routes
+// Error Handling Middleware
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+app.use(notFound);
 app.use(errorHandler);
 
 module.exports = app;

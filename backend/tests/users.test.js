@@ -1,83 +1,140 @@
-const request = require('supertest');
-const app = require('../app');
+const request = require('./setup');
 const mongoose = require('mongoose');
 const User = require('../models/User');
 
-beforeAll(async () => {
-  await mongoose.connect('mongodb://localhost:27017/testdb', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-});
-
-afterAll(async () => {
-  await mongoose.connection.dropDatabase();
-  await mongoose.connection.close();
-});
-
 describe('User API', () => {
-  it('should register a new user', async () => {
-    const res = await request(app)
-      .post('/api/users/register')
-      .send({
-        name: 'John Doe',
-        email: 'john@example.com',
-        password: 'password123',
-      });
-    expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty('token');
+  let userToken;
+
+  beforeEach(async () => {
+    await User.deleteMany({});
   });
 
-  it('should login an existing user', async () => {
-    const res = await request(app)
-      .post('/api/users/login')
-      .send({
-        email: 'john@example.com',
-        password: 'password123',
-      });
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty('token');
+  afterAll(async () => {
+    // No need to close connection here as it's handled in setup.js
   });
 
-  it('should get user profile', async () => {
-    const loginRes = await request(app)
-      .post('/api/users/login')
-      .send({
-        email: 'john@example.com',
-        password: 'password123',
-      });
-    const token = loginRes.body.token;
+  test('should register a new user', async () => {
+    const response = await request.post('/api/users/register').send({
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: 'password123',
+    });
 
-    const res = await request(app)
-      .get('/api/users/profile')
-      .set('Authorization', `Bearer ${token}`);
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty('email', 'john@example.com');
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('_id');
+    expect(response.body).toHaveProperty('token');
   });
 
-  it('should update user settings', async () => {
-    const loginRes = await request(app)
-      .post('/api/users/login')
-      .send({
-        email: 'john@example.com',
-        password: 'password123',
-      });
-    const token = loginRes.body.token;
+  test('should not register a user with existing email', async () => {
+    await request.post('/api/users/register').send({
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: 'password123',
+    });
 
-    const res = await request(app)
-      .put('/api/users/settings')
-      .set('Authorization', `Bearer ${token}`)
+    const response = await request.post('/api/users/register').send({
+      name: 'Jane Doe',
+      email: 'john@example.com',
+      password: 'password123',
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('User already exists');
+  });
+
+  test('should login a registered user', async () => {
+    await request.post('/api/users/register').send({
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: 'password123',
+    });
+
+    const response = await request.post('/api/users/login').send({
+      email: 'john@example.com',
+      password: 'password123',
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('token');
+
+    userToken = response.body.token;
+  });
+
+  test('should get the user profile', async () => {
+    await request.post('/api/users/register').send({
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: 'password123',
+    });
+
+    const loginResponse = await request.post('/api/users/login').send({
+      email: 'john@example.com',
+      password: 'password123',
+    });
+
+    userToken = loginResponse.body.token;
+
+    const response = await request.get('/api/users/profile')
+      .set('Authorization', `Bearer ${userToken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('_id');
+    expect(response.body.email).toBe('john@example.com');
+  });
+
+  test('should update the user profile', async () => {
+    await request.post('/api/users/register').send({
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: 'password123',
+    });
+
+    const loginResponse = await request.post('/api/users/login').send({
+      email: 'john@example.com',
+      password: 'password123',
+    });
+
+    userToken = loginResponse.body.token;
+
+    const response = await request.put('/api/users/profile')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        name: 'John Smith',
+        email: 'johnsmith@example.com',
+        password: 'newpassword123',
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.name).toBe('John Smith');
+    expect(response.body.email).toBe('johnsmith@example.com');
+  });
+
+  test('should update the user settings', async () => {
+    await request.post('/api/users/register').send({
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: 'password123',
+    });
+
+    const loginResponse = await request.post('/api/users/login').send({
+      email: 'john@example.com',
+      password: 'password123',
+    });
+
+    userToken = loginResponse.body.token;
+
+    const response = await request.put('/api/users/settings')
+      .set('Authorization', `Bearer ${userToken}`)
       .send({
         theme: 'dark',
         currency: 'EUR',
         notifications: true,
       });
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.settings).toMatchObject({
-      theme: 'dark',
-      currency: 'EUR',
-      notifications: true,
-    });
+
+    expect(response.status).toBe(200);
+    expect(response.body.settings.theme).toBe('dark');
+    expect(response.body.settings.currency).toBe('EUR');
+    expect(response.body.settings.notifications).toBe(true);
   });
 });
 

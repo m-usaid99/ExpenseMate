@@ -43,6 +43,7 @@
     "iconv-lite": "^0.4.24",
     "inherits": "^2.0.4",
     "ipaddr.js": "^1.9.1",
+    "jest-environment-jsdom": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
     "kareem": "^2.6.3",
     "media-typer": "^0.3.0",

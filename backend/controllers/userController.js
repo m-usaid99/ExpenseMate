@@ -92,25 +92,31 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     if (req.body.password) {
       user.password = req.body.password;
     }
-    user.settings.theme = req.body.settings.theme || user.settings.theme;
-    user.settings.currency = req.body.settings.currency || user.settings.currency;
-    user.settings.notifications = req.body.settings.notifications !== undefined ? req.body.settings.notifications : user.settings.notifications;
+    user.settings.theme = req.body.settings?.theme || user.settings.theme;
+    user.settings.currency = req.body.settings?.currency || user.settings.currency;
+    user.settings.notifications = req.body.settings?.notifications !== undefined ? req.body.settings.notifications : user.settings.notifications;
 
-    const updatedUser = await user.save();
+    try {
+      const updatedUser = await user.save();
 
-    res.json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      isAdmin: updatedUser.isAdmin,
-      settings: updatedUser.settings,
-      token: generateToken(updatedUser._id),
-    });
+      res.json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isAdmin: updatedUser.isAdmin,
+        settings: updatedUser.settings,
+        token: generateToken(updatedUser._id),
+      });
+    } catch (error) {
+      res.status(400);
+      throw new Error('Error updating user profile');
+    }
   } else {
     res.status(404);
     throw new Error('User not found');
   }
 });
+
 
 // @desc    Update user settings
 // @route   PUT /api/users/settings
