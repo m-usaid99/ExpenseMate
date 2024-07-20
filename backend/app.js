@@ -1,17 +1,13 @@
 const express = require('express');
-const dotenv = require('dotenv');
 const cors = require('cors');
-const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const incomeRoutes = require('./routes/incomeRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
 const budgetRoutes = require('./routes/budgetRoutes');
 const { errorHandler } = require('./middleware/errorMiddleware');
 
-dotenv.config();
-connectDB();
-
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
@@ -24,6 +20,8 @@ app.get('/', (req, res) => {
   res.send('API is running...');
 });
 
+// Error handling middleware should be defined after all routes
 app.use(errorHandler);
 
 module.exports = app;
+
