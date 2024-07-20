@@ -121,7 +121,7 @@ const updateUserSettings = asyncHandler(async (req, res) => {
   if (user) {
     user.settings.theme = req.body.theme || user.settings.theme;
     user.settings.currency = req.body.currency || user.settings.currency;
-    user.settings.notifications = req.body.notifications || user.settings.notifications;
+    user.settings.notifications = user.settings.notifications = req.body.notifications !== undefined ? req.body.notifications : user.settings.notifications;
 
     const updatedUser = await user.save();
     res.json({
