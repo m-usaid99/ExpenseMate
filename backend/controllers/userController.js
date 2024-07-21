@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
+const crypto = require('crypto');
 
 // @desc    Register a new User
 // @route   POST /api/users/register
@@ -143,14 +144,84 @@ const updateUserSettings = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Delete user
+// @route   DELETE /api/users/profile
+// @access  Private
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    await user.deleteOne();
+    res.json({ message: 'User removed' });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+// Request password reset
+const requestPasswordReset = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  // Generate and hash reset token
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+  console.log('Generated reset token: ', resetToken);
+  console.log('Hashed reset token: ', user.resetPasswordToken);
+  await user.save();
+
+  console.log('User after saving reset token:', await User.findOne({ email }));
+  res.status(200).json({ resetToken });
+});
+const resetPassword = asyncHandler(async (req, res) => {
+  const { password } = req.body;
+  const { token } = req.params;
+
+  // Hash the token
+  const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+  console.log(`Received reset token: ${token}`);
+  console.log(`Hashed reset token for comparison: ${hashedToken}`);
+
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordExpires: { $gt: Date.now() },
+  });
+
+  console.log('User found with reset token:', user);
+
+  if (!user) {
+    console.log('No user found or token expired');
+    res.status(400);
+    throw new Error('Invalid or expired token');
+  }
+
+  user.password = password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+
+  await user.save();
+
+  res.status(200).json({ message: 'Password has been reset' });
+});
+
+
 module.exports = {
   registerUser,
   authUser,
   getUserProfile,
   updateUserProfile,
   updateUserSettings,
+  deleteUser,
+  requestPasswordReset,
+  resetPassword,
 };
-
-
 
 

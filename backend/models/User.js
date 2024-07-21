@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const { resetPassword } = require('../controllers/userController');
 
 const userSchema = mongoose.Schema(
   {
@@ -33,8 +34,14 @@ const userSchema = mongoose.Schema(
       notifications: {
         type: Boolean,
         default: false,
-      }
+      },
     },
+    resetPasswordToken: {
+      type: String,
+    },
+    resetPasswordExpires: {
+      type: Date,
+    }
   },
   {
     timestamps: true,

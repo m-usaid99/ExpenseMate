@@ -1,19 +1,15 @@
 const request = require('./setup');
-const mongoose = require('mongoose');
 const User = require('../models/User');
 
 describe('User API', () => {
   let userToken;
+  let resetToken;
 
   beforeEach(async () => {
     await User.deleteMany({});
   });
 
-  afterAll(async () => {
-    // No need to close connection here as it's handled in setup.js
-  });
-
-  test('should register a new user', async () => {
+  it('should register a new user', async () => {
     const response = await request.post('/api/users/register').send({
       name: 'John Doe',
       email: 'john@example.com',
@@ -25,7 +21,7 @@ describe('User API', () => {
     expect(response.body).toHaveProperty('token');
   });
 
-  test('should not register a user with existing email', async () => {
+  it('should not register a user with existing email', async () => {
     await request.post('/api/users/register').send({
       name: 'John Doe',
       email: 'john@example.com',
@@ -42,7 +38,7 @@ describe('User API', () => {
     expect(response.body.message).toBe('User already exists');
   });
 
-  test('should login a registered user', async () => {
+  it('should login a registered user', async () => {
     await request.post('/api/users/register').send({
       name: 'John Doe',
       email: 'john@example.com',
@@ -60,7 +56,7 @@ describe('User API', () => {
     userToken = response.body.token;
   });
 
-  test('should get the user profile', async () => {
+  it('should get the user profile', async () => {
     await request.post('/api/users/register').send({
       name: 'John Doe',
       email: 'john@example.com',
@@ -82,7 +78,7 @@ describe('User API', () => {
     expect(response.body.email).toBe('john@example.com');
   });
 
-  test('should update the user profile', async () => {
+  it('should update the user profile', async () => {
     await request.post('/api/users/register').send({
       name: 'John Doe',
       email: 'john@example.com',
@@ -109,7 +105,7 @@ describe('User API', () => {
     expect(response.body.email).toBe('johnsmith@example.com');
   });
 
-  test('should update the user settings', async () => {
+  it('should update the user settings', async () => {
     await request.post('/api/users/register').send({
       name: 'John Doe',
       email: 'john@example.com',
@@ -136,5 +132,77 @@ describe('User API', () => {
     expect(response.body.settings.currency).toBe('EUR');
     expect(response.body.settings.notifications).toBe(true);
   });
-});
 
+  it('should delete the user profile', async () => {
+    await request.post('/api/users/register').send({
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: 'password123',
+    });
+
+    const loginResponse = await request.post('/api/users/login').send({
+      email: 'john@example.com',
+      password: 'password123',
+    });
+
+    userToken = loginResponse.body.token;
+
+    const response = await request.delete('/api/users/profile')
+      .set('Authorization', `Bearer ${userToken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('User removed');
+  });
+
+  it('should request password reset', async () => {
+    await request.post('/api/users/register').send({
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: 'password123',
+    });
+    const response = await request.post('/api/users/request-reset').send({
+      email: 'john@example.com',
+    });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('resetToken');
+    resetToken = response.body.resetToken;
+  });
+
+  it('should reset password', async () => {
+    await request.post('/api/users/register').send({
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: 'password123',
+    });
+
+    const requestResetResponse = await request.post('/api/users/request-reset').send({
+      email: 'john@example.com',
+    });
+
+    console.log('Request Reset Response: ', requestResetResponse.body);
+    resetToken = requestResetResponse.body.resetToken;
+    const response = await request.put(`/api/users/reset-password/${resetToken}`).send({
+      password: 'newpassword123',
+    })
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Password has been reset');
+  });
+
+  it('should not reset password with invalid or expired token', async () => {
+    const response = await request.put('/api/users/reset-password/invalidtoken').send({
+      password: 'newpassword123',
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('Invalid or expired token');
+  });
+
+  it('should not request password reset for non-existent user', async () => {
+    const response = await request.post('/api/users/request-reset').send({
+      email: 'nonexistent@example.com',
+    });
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe('User not found');
+  });
+});
