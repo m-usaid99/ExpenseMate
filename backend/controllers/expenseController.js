@@ -8,6 +8,11 @@ const Expense = require('../models/Expense');
 const addExpense = asyncHandler(async (req, res) => {
   const { date, category, amount, tag, notes } = req.body;
 
+  if (!date || !category || !amount || !tag) {
+    res.status(400);
+    throw new Error('Date, category, amount, and tag are required');
+  }
+
   const expense = new Expense({
     user: req.user._id,
     date,
@@ -29,11 +34,17 @@ const getExpenses = asyncHandler(async (req, res) => {
   res.json(expenses);
 });
 
+
 // @desc    Update expense
 // @route   PUT /api/expense/:id
 // @access  Private
 const updateExpense = asyncHandler(async (req, res) => {
   const { date, category, amount, tag, notes } = req.body;
+
+  if (!date || !category || !tag || isNaN(amount) || amount < 0) {
+    res.status(400);
+    throw new Error('Invalid data');
+  }
 
   const expense = await Expense.findById(req.params.id);
 

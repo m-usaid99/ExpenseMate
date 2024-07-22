@@ -40,6 +40,19 @@ describe('Expense API', () => {
     expect(response.body).toHaveProperty('_id');
   });
 
+  it('should not add an expense with missing fields ', async () => {
+    const response = await request(app)
+      .post('/api/expense')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        category: 'Food',
+        amount: 100,
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('Date, category, amount, and tag are required');
+  });
+
   it('should get all expenses', async () => {
     await request(app)
       .post('/api/expense')
@@ -88,6 +101,37 @@ describe('Expense API', () => {
     expect(response.status).toBe(200);
     expect(response.body.category).toBe('Utilities');
   });
+
+
+  it('should not update an expense with invalid data', async () => {
+    const addResponse = await request(app)
+      .post('/api/expense')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        date: new Date(),
+        category: 'Food',
+        amount: 100,
+        tag: 'Groceries',
+        notes: 'Test expense',
+      });
+
+    const expenseId = addResponse.body._id;
+
+    const response = await request(app)
+      .put(`/api/expense/${expenseId}`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        date: 'invalid date',
+        category: '',
+        amount: -100,
+        tag: '',
+        notes: 'Updated expense',
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('Invalid data');
+  });
+
 
   it('should delete an expense', async () => {
     const addResponse = await request(app)
