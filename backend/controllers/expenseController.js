@@ -59,7 +59,7 @@ const deleteExpense = asyncHandler(async (req, res) => {
   const expense = await Expense.findById(req.params.id);
 
   if (expense) {
-    await expense.remove();
+    await expense.deleteOne();
     res.json({ message: 'Expense removed' });
   } else {
     res.status(404);

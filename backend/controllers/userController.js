@@ -174,11 +174,11 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
   user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
   user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
 
-  console.log('Generated reset token: ', resetToken);
-  console.log('Hashed reset token: ', user.resetPasswordToken);
+  // console.log('Generated reset token: ', resetToken);
+  // console.log('Hashed reset token: ', user.resetPasswordToken);
   await user.save();
 
-  console.log('User after saving reset token:', await User.findOne({ email }));
+  // console.log('User after saving reset token:', await User.findOne({ email }));
   res.status(200).json({ resetToken });
 });
 const resetPassword = asyncHandler(async (req, res) => {
@@ -187,18 +187,16 @@ const resetPassword = asyncHandler(async (req, res) => {
 
   // Hash the token
   const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-  console.log(`Received reset token: ${token}`);
-  console.log(`Hashed reset token for comparison: ${hashedToken}`);
+  // console.log(`Received reset token: ${token}`);
+  //  console.log(`Hashed reset token for comparison: ${hashedToken}`);
 
   const user = await User.findOne({
     resetPasswordToken: hashedToken,
     resetPasswordExpires: { $gt: Date.now() },
   });
 
-  console.log('User found with reset token:', user);
 
   if (!user) {
-    console.log('No user found or token expired');
     res.status(400);
     throw new Error('Invalid or expired token');
   }

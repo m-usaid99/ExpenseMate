@@ -13,7 +13,7 @@ router.route('/')
   .get(protect, getExpenses);
 
 router.route('/:id')
-  .post(protect, updateExpense)
-  .get(protect, deleteExpense)
+  .put(protect, updateExpense)
+  .delete(protect, deleteExpense)
 
 module.exports = router;

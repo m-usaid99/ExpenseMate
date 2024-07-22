@@ -10,7 +10,9 @@ app.use(morgan('dev'));
 
 // Routes
 const userRoutes = require('./routes/userRoutes');
+const expenseRoutes = require('./routes/expenseRoutes');
 app.use('/api/users', userRoutes);
+app.use('/api/expense', expenseRoutes);
 
 // Error Handling Middleware
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
