@@ -30,6 +30,7 @@ const addExpense = asyncHandler(async (req, res) => {
 // @route   GET /api/expense
 // @access  Private
 const getExpenses = asyncHandler(async (req, res) => {
+  console.log("Fetching expenses for user:", req.user._id)
   const expenses = await Expense.find({ user: req.user._id });
   res.json(expenses);
 });

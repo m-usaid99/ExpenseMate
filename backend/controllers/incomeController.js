@@ -1,12 +1,16 @@
 const asyncHandler = require('express-async-handler');
 const Income = require('../models/Income');
-const { Error } = require('mongoose');
 
 // @desc    Add new Income
 // @route   POST /api/income
 // @access  Private
 const addIncome = asyncHandler(async (req, res) => {
   const { date, category, amount, tag, notes } = req.body;
+
+  if (!date || !category || !amount || !tag || isNaN(amount) || amount < 0) {
+    res.status(400);
+    throw new Error('Date, category, amount, and tag are required');
+  };
 
   const income = new Income({
     user: req.user._id,
@@ -21,11 +25,11 @@ const addIncome = asyncHandler(async (req, res) => {
   res.status(201).json(createdIncome);
 });
 
-// @desc    Update income
-// @route   PUT /api/income/:id
+// @desc    Get incomes 
+// @route   GET /api/income/:id 
 // @access  Private
 const getIncomes = asyncHandler(async (req, res) => {
-  const incomes = await Income.find({ user: req.user_id });
+  const incomes = await Income.find({ user: req.user._id });
   res.json(incomes);
 });
 
@@ -34,6 +38,11 @@ const getIncomes = asyncHandler(async (req, res) => {
 // @access  Private
 const updateIncome = asyncHandler(async (req, res) => {
   const { date, category, amount, tag, notes } = req.body;
+
+  if (!date || !category || !amount || !tag || isNaN(amount) || amount < 0) {
+    res.status(400);
+    throw new Error('Invalid data');
+  }
 
   const income = await Income.findById(req.params.id);
 
@@ -58,7 +67,7 @@ const updateIncome = asyncHandler(async (req, res) => {
 const deleteIncome = asyncHandler(async (req, res) => {
   const income = await Income.findById(req.params.id);
   if (income) {
-    await income.remove();
+    await income.deleteOne();
     res.json({ message: 'Income removed' });
   } else {
     res.status(404);

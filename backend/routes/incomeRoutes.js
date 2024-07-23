@@ -11,6 +11,6 @@ const {
 const { protect } = require('../middleware/authMiddleware');
 
 router.route('/').post(protect, addIncome).get(protect, getIncomes);
-router.route('/:id').post(protect, updateIncome).delete(protect, deleteIncome);
+router.route('/:id').put(protect, updateIncome).delete(protect, deleteIncome);
 
 module.exports = router;
