@@ -75,7 +75,6 @@ describe('Income API', () => {
       .get('/api/income')
       .set('Authorization', `Bearer ${userToken}`);
 
-    console.log('GET ALL INCOMES RESPONSE:', response.body);
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveLength(1);
@@ -93,7 +92,6 @@ describe('Income API', () => {
         notes: 'Test income',
       });
 
-    console.log('Add Income for Update Response:', addResponse.body);
 
     const incomeId = addResponse.body._id;
 
@@ -108,7 +106,6 @@ describe('Income API', () => {
         notes: 'Updated income',
       });
 
-    console.log('Update Income Response:', response.body);
 
     expect(response.status).toBe(200);
     expect(response.body.category).toBe('Freelance');
@@ -126,7 +123,6 @@ describe('Income API', () => {
         notes: 'Test income',
       });
 
-    console.log('Add Income for Invalid Update Response:', addResponse.body);
 
     const incomeId = addResponse.body._id;
 
@@ -141,7 +137,6 @@ describe('Income API', () => {
         notes: 'Updated income',
       });
 
-    console.log('Invalid Update Income Response:', response.body);
 
     expect(response.status).toBe(400);
     expect(response.body.message).toBe('Invalid data');
@@ -159,15 +154,12 @@ describe('Income API', () => {
         notes: 'Test income',
       });
 
-    console.log('Add Income for Delete Response:', addResponse.body);
 
     const incomeId = addResponse.body._id;
 
     const response = await request(app)
       .delete(`/api/income/${incomeId}`)
       .set('Authorization', `Bearer ${userToken}`);
-
-    console.log('Delete Income Response:', response.body);
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe('Income removed');

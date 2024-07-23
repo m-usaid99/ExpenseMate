@@ -22,15 +22,15 @@ const addBudget = asyncHandler(async (req, res) => {
 
 
 // @desc    Get all budgets
-// @route   GET /api/budgets
+// @route   GET /api/budget
 // @access  Private
 const getBudgets = asyncHandler(async (req, res) => {
-  const budgets = await Budget.find({ user: req.user_id });
+  const budgets = await Budget.find({ user: req.user._id });
   res.json(budgets);
 });
 
 // @desc    Update budget
-// @route   PUT /api/bugets/:id
+// @route   PUT /api/budgets/:id
 // @access  Private
 const updateBudget = asyncHandler(async (req, res) => {
   const { name, totalAmount, categories, startDate, endDate } = req.body;
@@ -57,9 +57,8 @@ const updateBudget = asyncHandler(async (req, res) => {
 // @access  Private
 const deleteBudget = asyncHandler(async (req, res) => {
   const budget = await Budget.findById(req.params.id);
-
   if (budget) {
-    await budget.remove();
+    await budget.deleteOne();
     res.json({ message: 'Budget removed' });
   } else {
     res.status(404);

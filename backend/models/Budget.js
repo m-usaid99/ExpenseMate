@@ -6,7 +6,7 @@ const categoryBudgetSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    anmount: {
+    amount: {
       type: Number,
       required: true,
     },
