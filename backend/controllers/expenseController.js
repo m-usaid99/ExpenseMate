@@ -25,13 +25,30 @@ const addExpense = asyncHandler(async (req, res) => {
   const createdExpense = await expense.save();
   res.status(201).json(createdExpense);
 });
-
 // @desc    Get all expenses
 // @route   GET /api/expense
 // @access  Private
 const getExpenses = asyncHandler(async (req, res) => {
-  console.log("Fetching expenses for user:", req.user._id)
-  const expenses = await Expense.find({ user: req.user._id });
+  const { startDate, endDate, category, minAmount, maxAmount } = req.query;
+  const query = { user: req.user._id };
+
+  if (startDate) {
+    query.date = { ...query.date, $gte: new Date(startDate) };
+  }
+  if (endDate) {
+    query.date = { ...query.date, $lte: new Date(endDate) };
+  }
+  if (category) {
+    query.category = category;
+  }
+  if (minAmount) {
+    query.amount = { ...query.amount, $gte: parseFloat(minAmount) };
+  }
+  if (maxAmount) {
+    query.amount = { ...query.amount, $lte: parseFloat(maxAmount) };
+  }
+
+  const expenses = await Expense.find(query);
   res.json(expenses);
 });
 

@@ -50,7 +50,7 @@ describe('Expense API', () => {
       });
 
     expect(response.status).toBe(400);
-    expect(response.body.message).toBe('Date, category, amount, and tag are required');
+    expect(response.body.message).toBe("\"date\" is required")
   });
 
   it('should get all expenses', async () => {

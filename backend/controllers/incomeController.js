@@ -24,15 +24,32 @@ const addIncome = asyncHandler(async (req, res) => {
   const createdIncome = await income.save();
   res.status(201).json(createdIncome);
 });
-
-// @desc    Get incomes 
-// @route   GET /api/income/:id 
+// @desc    Get all incomes
+// @route   GET /api/income
 // @access  Private
 const getIncomes = asyncHandler(async (req, res) => {
-  const incomes = await Income.find({ user: req.user._id });
+  const { startDate, endDate, category, minAmount, maxAmount } = req.query;
+  const query = { user: req.user._id };
+
+  if (startDate) {
+    query.date = { ...query.date, $gte: new Date(startDate) };
+  }
+  if (endDate) {
+    query.date = { ...query.date, $lte: new Date(endDate) };
+  }
+  if (category) {
+    query.category = category;
+  }
+  if (minAmount) {
+    query.amount = { ...query.amount, $gte: parseFloat(minAmount) };
+  }
+  if (maxAmount) {
+    query.amount = { ...query.amount, $lte: parseFloat(maxAmount) };
+  }
+
+  const incomes = await Income.find(query);
   res.json(incomes);
 });
-
 // @desc    Update income
 // @route   PUT /api/income/:id
 // @access  Private

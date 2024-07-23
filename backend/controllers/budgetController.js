@@ -20,14 +20,27 @@ const addBudget = asyncHandler(async (req, res) => {
   res.status(201).json(createdBudget);
 });
 
-
 // @desc    Get all budgets
-// @route   GET /api/budget
+// @route   GET /api/budgets
 // @access  Private
 const getBudgets = asyncHandler(async (req, res) => {
-  const budgets = await Budget.find({ user: req.user._id });
+  const { startDate, endDate, category } = req.query;
+  const query = { user: req.user._id };
+
+  if (startDate) {
+    query.startDate = { ...query.startDate, $gte: new Date(startDate) };
+  }
+  if (endDate) {
+    query.endDate = { ...query.endDate, $lte: new Date(endDate) };
+  }
+  if (category) {
+    query.categories = { $elemMatch: { category } };
+  }
+
+  const budgets = await Budget.find(query);
   res.json(budgets);
 });
+
 
 // @desc    Update budget
 // @route   PUT /api/budgets/:id

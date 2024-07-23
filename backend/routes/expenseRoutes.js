@@ -7,10 +7,12 @@ const {
   deleteExpense,
 } = require('../controllers/expenseController');
 const { protect } = require('../middleware/authMiddleware');
+const { validateQuery, validateRequest } = require('../middleware/validationMiddleware');
+const { addExpenseSchema, getExpensesSchema } = require('../validators/expenseValidator');
 
 router.route('/')
-  .post(protect, addExpense)
-  .get(protect, getExpenses);
+  .post(protect, validateRequest(addExpenseSchema), addExpense)
+  .get(protect, validateQuery(getExpensesSchema), getExpenses);
 
 router.route('/:id')
   .put(protect, updateExpense)

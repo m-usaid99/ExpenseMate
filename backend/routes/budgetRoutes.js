@@ -7,10 +7,12 @@ const {
   deleteBudget,
 } = require('../controllers/budgetController');
 const { protect } = require('../middleware/authMiddleware');
+const { validateQuery, validateRequest } = require('../middleware/validationMiddleware');
+const { addBudgetSchema, getBudgetsSchema } = require('../validators/budgetValidator');
 
 router.route('/')
-  .post(protect, addBudget)
-  .get(protect, getBudgets);
+  .post(protect, validateRequest(addBudgetSchema), addBudget)
+  .get(protect, validateQuery(getBudgetsSchema), getBudgets);
 
 router.route('/:id')
   .put(protect, updateBudget)
