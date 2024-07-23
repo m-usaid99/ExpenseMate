@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const connectDB = require('./config/db');
+const { swaggerUi, specs } = require('./swagger');
 
 const app = express();
 
@@ -18,10 +18,14 @@ app.use('/api/expense', expenseRoutes);
 app.use('/api/income', incomeRoutes);
 app.use('/api/budget', budgetRoutes);
 
+// Swagger docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
 // Error Handling Middleware
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 app.use(notFound);
 app.use(errorHandler);
+
 
 module.exports = app;
 
