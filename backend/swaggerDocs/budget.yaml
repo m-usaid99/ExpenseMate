@@ -117,19 +117,53 @@ paths:
                 $ref: '#/components/schemas/Error'
     get:
       summary: Get all budgets
-      tags: [Budget]
-      security:
-        - BearerAuth: []
+      tags:
+        - Budget
+      parameters:
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          description: Start date for filtering budgets
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          description: End date for filtering budgets
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Category for filtering budgets
+        - in: query
+          name: tag
+          schema:
+            type: string
+            enum: [one-time, monthly, recurring]
+          description: Tag for filtering budgets
       responses:
-        '200':
-          description: List of budgets
+        200:
+          description: Successful response
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Budget'
-
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /budget/{id}:
     put:
       summary: Update budget

@@ -93,18 +93,53 @@ paths:
                 $ref: '#/components/schemas/Error'
     get:
       summary: Get all incomes
-      tags: [Income]
-      security:
-        - BearerAuth: []
+      tags:
+        - Income
+      parameters:
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          description: Start date for filtering incomes
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          description: End date for filtering incomes
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Category for filtering incomes
+        - in: query
+          name: tag
+          schema:
+            type: string
+            enum: [one-time, monthly, recurring]
+          description: Tag for filtering incomes
       responses:
-        '200':
-          description: List of incomes
+        200:
+          description: Successful response
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Income'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /income/{id}:
     put:

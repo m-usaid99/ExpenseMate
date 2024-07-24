@@ -99,19 +99,53 @@ paths:
                 $ref: '#/components/schemas/Error'
     get:
       summary: Get all expenses
-      tags: [Expenses]
-      security:
-        - BearerAuth: []
+      tags:
+        - Expenses
+      parameters:
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          description: Start date for filtering expenses
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          description: End date for filtering expenses
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Category for filtering expenses
+        - in: query
+          name: tag
+          schema:
+            type: string
+            enum: [one-time, monthly, recurring]
+          description: Tag for filtering expenses
       responses:
-        '200':
-          description: List of expenses
+        200:
+          description: Successful response
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Expense'
-
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /expense/{id}:
     put:
       summary: Update expense
