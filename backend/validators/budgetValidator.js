@@ -17,6 +17,7 @@ const getBudgetsSchema = Joi.object({
   startDate: Joi.date().optional(),
   endDate: Joi.date().optional(),
   category: Joi.string().optional(),
+  name: Joi.string().optional(),
 });
 
 module.exports = {

@@ -24,7 +24,7 @@ const addBudget = asyncHandler(async (req, res) => {
 // @route   GET /api/budgets
 // @access  Private
 const getBudgets = asyncHandler(async (req, res) => {
-  const { startDate, endDate, category } = req.query;
+  const { startDate, endDate, category, name } = req.query;
   const query = { user: req.user._id };
 
   if (startDate) {
@@ -35,6 +35,9 @@ const getBudgets = asyncHandler(async (req, res) => {
   }
   if (category) {
     query.categories = { $elemMatch: { category } };
+  }
+  if (name) {
+    query.name = name;
   }
 
   const budgets = await Budget.find(query);

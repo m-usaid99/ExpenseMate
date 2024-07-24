@@ -14,6 +14,7 @@ const getExpensesSchema = Joi.object({
   category: Joi.string().optional(),
   minAmount: Joi.number().positive().optional(),
   maxAmount: Joi.number().positive().optional(),
+  tag: Joi.string().valid('One-time', 'Monthly', 'Recurring'),
 });
 
 module.exports = {

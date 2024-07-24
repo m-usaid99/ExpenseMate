@@ -25,40 +25,52 @@ const addExpense = asyncHandler(async (req, res) => {
   const createdExpense = await expense.save();
   res.status(201).json(createdExpense);
 });
+
 // @desc    Get all expenses
 // @route   GET /api/expense
 // @access  Private
 const getExpenses = asyncHandler(async (req, res) => {
-  const { startDate, endDate, category, minAmount, maxAmount } = req.query;
+  const { category, startDate, endDate, minAmount, maxAmount, tag } = req.query;
+
   const query = { user: req.user._id };
 
-  if (startDate) {
-    query.date = { ...query.date, $gte: new Date(startDate) };
-  }
-  if (endDate) {
-    query.date = { ...query.date, $lte: new Date(endDate) };
-  }
   if (category) {
     query.category = category;
   }
-  if (minAmount) {
-    query.amount = { ...query.amount, $gte: parseFloat(minAmount) };
+
+  if (startDate || endDate) {
+    query.date = {};
+    if (startDate) {
+      query.date.$gte = new Date(startDate);
+    }
+    if (endDate) {
+      query.date.$lte = new Date(endDate);
+    }
   }
-  if (maxAmount) {
-    query.amount = { ...query.amount, $lte: parseFloat(maxAmount) };
+
+  if (minAmount || maxAmount) {
+    query.amount = {};
+    if (minAmount) {
+      query.amount.$gte = Number(minAmount);
+    }
+    if (maxAmount) {
+      query.amount.$lte = Number(maxAmount);
+    }
+  }
+
+  if (tag) {
+    query.tag = tag;
   }
 
   const expenses = await Expense.find(query);
   res.json(expenses);
 });
 
-
 // @desc    Update expense
 // @route   PUT /api/expense/:id
 // @access  Private
 const updateExpense = asyncHandler(async (req, res) => {
   const { date, category, amount, tag, notes } = req.body;
-
   if (!date || !category || !tag || isNaN(amount) || amount < 0) {
     res.status(400);
     throw new Error('Invalid data');
