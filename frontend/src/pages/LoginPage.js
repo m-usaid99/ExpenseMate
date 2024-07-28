@@ -1,20 +1,26 @@
 // src/components/LoginPage.js
-import React from 'react';
-import { Container, Typography, TextField, Button, Box } from '@mui/material';
+import React, { useState } from 'react';
+import { Container, Typography, TextField, Button, Box, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { login } from "../features/user/userSlice";
+import { useDispatch, useSelector } from 'react-redux';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.user);
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleLogin = (event) => {
     event.preventDefault();
-    // Perform login logic here (e.g., validate user credentials)
-    // On successful login, navigate to the dashboard
-    navigate('/dashboard');
+    dispatch(login({ email, password })).then((response) => {
+      if (response.meta.requestStatus === 'fulfilled') {
+        navigate('/dashboard');
+      }
+    });
   };
-
   return (
     <Container maxWidth="sm">
       <Box
@@ -31,6 +37,7 @@ const LoginPage = () => {
         <Typography variant="h5" component="h2" gutterBottom>
           Login
         </Typography>
+        {error && <Alert severity="error">{error.message}</Alert>}
         <Box
           component="form"
           sx={{
@@ -48,6 +55,8 @@ const LoginPage = () => {
             name="email"
             autoComplete="email"
             autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             margin="normal"
@@ -58,6 +67,8 @@ const LoginPage = () => {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <Button
             type="submit"
@@ -66,7 +77,7 @@ const LoginPage = () => {
             color="primary"
             sx={{ mt: 3, mb: 2 }}
           >
-            Login
+            {loading ? 'Logging in...' : 'Login'}
           </Button>
         </Box>
       </Box>
