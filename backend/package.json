@@ -91,6 +91,7 @@
     "whatwg-url": "^13.0.0"
   },
   "scripts": {
+    "seed": "node seed.js",
     "test": "jest",
     "start": "node server.js"
   },
