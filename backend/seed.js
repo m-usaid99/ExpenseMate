@@ -16,13 +16,11 @@ const seedDB = async () => {
   await Expense.deleteMany({});
   await Income.deleteMany({});
 
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash('password123', salt);
 
   const user = new User({
     name: 'Test User',
     email: 'test@example.com',
-    password: hashedPassword,
+    password: 'password123',
     isAdmin: false,
     settings: {
       theme: 'light',

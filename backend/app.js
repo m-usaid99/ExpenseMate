@@ -1,11 +1,13 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const { swaggerUi, specs } = require('./swagger');
 
 const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 app.use(morgan('dev'));
 
 // Routes
@@ -23,6 +25,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Error Handling Middleware
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+const { required } = require('joi');
 app.use(notFound);
 app.use(errorHandler);
 
