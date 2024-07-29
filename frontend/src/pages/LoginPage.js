@@ -1,7 +1,7 @@
 // src/components/LoginPage.js
 import React, { useState } from 'react';
 import { Container, Typography, TextField, Button, Box, Alert } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { login } from "../features/user/userSlice";
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -79,6 +79,14 @@ const LoginPage = () => {
           >
             {loading ? 'Logging in...' : 'Login'}
           </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Link to="/register">
+              <Button variant='text'>Sign Up</Button>
+            </Link>
+            <Link to="/forgot-password">
+              <Button variant='text'>Forgot Your Password?</Button>
+            </Link>
+          </Box>
         </Box>
       </Box>
     </Container>

@@ -8,12 +8,14 @@ import ExpensesPage from './features/expenses/ExpensesPage';
 import IncomePage from './features/income/IncomePage';
 import Budget from './pages/Budget';
 import Reports from './pages/Reports';
+import RegistrationPage from './pages/RegistrationPage';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/register" element={<RegistrationPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/expenses" element={<ExpensesPage />} />

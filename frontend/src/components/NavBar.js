@@ -13,10 +13,13 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import Logout from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
 import SettingsModal from "./SettingsModal"; // Adjust the import path accordingly
+import { useDispatch } from "react-redux";
+import { logout } from '../features/user/userSlice';
 
 const NavBar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -37,6 +40,7 @@ const NavBar = () => {
 
   const handleLogout = () => {
     // Add logout logic here
+    dispatch(logout());
     setAnchorEl(null);
   };
 
