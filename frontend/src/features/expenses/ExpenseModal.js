@@ -8,6 +8,9 @@ import {
   Button,
   MenuItem,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { addExpenseAsync, updateExpenseAsync } from "./expensesSlice";
+import { format, parseISO } from "date-fns";
 
 const categories = [
   "Food",
@@ -25,29 +28,33 @@ const categories = [
   "Miscellaneous",
 ];
 
-const tags = ["Monthly", "One-time", "Recurring"];
+const tags = ["monthly", "one-time", "recurring"];
 
-const ExpenseModal = ({ open, onClose, onSave, expense }) => {
+const ExpenseModal = ({ open, onClose, expense }) => {
+  const dispatch = useDispatch();
   const [form, setForm] = useState({
-    date: new Date().toISOString().split("T")[0],
+    date: format(new Date(), "yyyy-MM-dd"),
     category: "",
     amount: "",
-    tags: "",
+    tag: "",
     notes: "",
   });
 
   useEffect(() => {
     if (expense) {
       setForm({
-        ...expense,
+        date: format(parseISO(expense.date), "yyyy-MM-dd"),
+        category: expense.category || "", // Ensure category is set or default to empty string
         amount: expense.amount.toString(), // Ensure amount is treated as string for the input
+        tag: expense.tag || "", // Ensure tag is set or default to empty string
+        notes: expense.notes || "", // Ensure notes are set or default to empty string
       });
     } else {
       setForm({
-        date: new Date().toISOString().split("T")[0],
+        date: format(new Date(), "yyyy-MM-dd"),
         category: "",
         amount: "",
-        tags: "",
+        tag: "",
         notes: "",
       });
     }
@@ -61,10 +68,23 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
   };
 
   const handleSave = () => {
-    onSave({
+    const expenseData = {
       ...form,
       amount: parseFloat(form.amount), // Ensure amount is a number on save
-    });
+      date: parseISO(form.date).toISOString(), // Ensure date is properly formatted
+    };
+
+    // Validate data before dispatching
+    if (!expenseData.category || !expenseData.amount || !expenseData.date) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    if (expense) {
+      dispatch(updateExpenseAsync({ id: expense._id, expenseData }));
+    } else {
+      dispatch(addExpenseAsync(expenseData));
+    }
     onClose();
   };
 
@@ -108,9 +128,9 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
         />
         <TextField
           select
-          label="Tags"
-          value={form.tags}
-          onChange={(e) => handleChange("tags", e.target.value)}
+          label="Tag"
+          value={form.tag}
+          onChange={(e) => handleChange("tag", e.target.value)}
           fullWidth
           margin="normal"
           variant="outlined"
@@ -141,3 +161,4 @@ const ExpenseModal = ({ open, onClose, onSave, expense }) => {
 };
 
 export default ExpenseModal;
+
