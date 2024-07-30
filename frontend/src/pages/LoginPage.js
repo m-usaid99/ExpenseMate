@@ -8,19 +8,19 @@ import { useDispatch, useSelector } from 'react-redux';
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.user);
+  const { loading, error, userInfo } = useSelector((state) => state.user);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    dispatch(login({ email, password })).then((response) => {
-      if (response.meta.requestStatus === 'fulfilled') {
-        navigate('/dashboard');
-      }
-    });
-  };
+    dispatch(login({ email, password }))
+    if (userInfo) {
+      navigate('/dashboard');
+    }
+  }
+
   return (
     <Container maxWidth="sm">
       <Box

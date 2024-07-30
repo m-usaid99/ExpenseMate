@@ -13,7 +13,6 @@ import ExpenseIcon from "@mui/icons-material/RemoveCircleOutline";
 import IncomeIcon from "@mui/icons-material/AddCircleOutline";
 import { useSelector } from "react-redux";
 import { selectRecentExpenses } from "../features/expenses/expensesSlice";
-import { selectRecentIncome } from "../features/income/incomeSlice";
 
 const RecentTransactions = () => {
   const recentExpenses = useSelector(selectRecentExpenses).map(expense => ({ ...expense, type: 'Expense' }));

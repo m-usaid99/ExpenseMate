@@ -20,7 +20,7 @@ const categories = [
   "Miscellaneous",
 ];
 
-const tags = ["Monthly", "One-time", "Recurring"];
+const tags = ["monthly", "one-time", "recurring"];
 
 const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense, handleResetFilters }) => {
   const expenses = useSelector((state) => state.expenses.expenses);

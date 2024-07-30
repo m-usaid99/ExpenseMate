@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Box } from '@mui/material';
 import { Edit, Delete, LocalHospital, Commute, LocalDining, School, Movie, ShoppingCart } from '@mui/icons-material';
 import { Category, Fastfood, Home, Payment, DirectionsCar, Flight } from '@mui/icons-material';
+import { format, parseISO } from 'date-fns';
 
 const categoryIcons = {
   Food: <Fastfood />,
@@ -36,19 +37,19 @@ const ExpenseList = ({ expenses, onEdit, onDelete }) => {
           </TableHead>
           <TableBody>
             {expenses.map((expense) => (
-              <TableRow key={expense.id} sx={{ fontSize: '1rem' }}>
-                <TableCell>{expense.date}</TableCell>
+              <TableRow key={expense._id} sx={{ fontSize: '1rem' }}>
+                <TableCell>{format(parseISO(expense.date), 'yyyy-MM-dd')}</TableCell>
                 <TableCell>
                   {categoryIcons[expense.category] || categoryIcons['Miscellaneous']} {expense.category}
                 </TableCell>
                 <TableCell>{expense.amount}</TableCell>
-                <TableCell>{expense.tags}</TableCell>
+                <TableCell>{expense.tag}</TableCell>
                 <TableCell>{expense.notes}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => onEdit(expense)}>
                     <Edit />
                   </IconButton>
-                  <IconButton onClick={() => onDelete(expense.id)}>
+                  <IconButton onClick={() => onDelete(expense._id)}>
                     <Delete />
                   </IconButton>
                 </TableCell>
@@ -62,3 +63,4 @@ const ExpenseList = ({ expenses, onEdit, onDelete }) => {
 };
 
 export default ExpenseList;
+

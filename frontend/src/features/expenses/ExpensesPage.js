@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Typography, Container, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addExpense,
-  editExpense,
+  fetchExpensesAsync,
+  addExpenseAsync,
+  updateExpenseAsync,
   deleteExpense,
-  selectRecentExpenses,
+  selectTotalExpenses,
+  selectExpenseTrendsData,
 } from "./expensesSlice";
 import ExpenseList from "./ExpenseList";
 import ExpenseFilters from "./ExpenseFilters";
@@ -13,17 +15,15 @@ import ExpenseModal from "./ExpenseModal";
 import Layout from "../../components/Layout";
 import ExpenseSummary from "./ExpenseSummary";
 import ExpenseTrends from "./ExpenseTrends";
-import { selectTotalExpenses, selectExpenseTrendsData } from "./expensesSlice";
 
 const ExpensesPage = () => {
   const dispatch = useDispatch();
   const { expenses, loading, error } = useSelector((state) => state.expenses);
   const totalExpenses = useSelector(selectTotalExpenses);
-  const recentExpenses = useSelector(selectRecentExpenses);
   const expenseTrendsData = useSelector(selectExpenseTrendsData);
   const [filters, setFilters] = useState({
     category: "",
-    tags: "",
+    tag: "",
     startDate: null,
     endDate: null,
     amountRange: [0, 10000],
@@ -32,10 +32,8 @@ const ExpensesPage = () => {
   const [selectedExpense, setSelectedExpense] = useState(null);
 
   useEffect(() => {
-    console.log("Expenses:", expenses);
-    console.log("Total Expenses:", totalExpenses);
-    console.log("Expense Trends Data:", expenseTrendsData);
-  }, [expenses, totalExpenses, expenseTrendsData]);
+    dispatch(fetchExpensesAsync());
+  }, [dispatch]);
 
   const handleFilterChange = (field, value) => {
     setFilters((prevFilters) => ({ ...prevFilters, [field]: value }));
@@ -51,35 +49,44 @@ const ExpensesPage = () => {
     setIsModalOpen(true);
   };
 
-  const handleDeleteExpense = (id) => {
-    dispatch(deleteExpense(id));
+  const handleDeleteExpense = async (id) => {
+    try {
+      await deleteExpense(id);
+      dispatch(deleteExpense(id));
+    } catch (error) {
+      console.error("Failed to delete expense:", error);
+    }
   };
 
-  const handleSaveExpense = (expense) => {
-    if (selectedExpense) {
-      dispatch(editExpense(expense));
-    } else {
-      dispatch(addExpense({ ...expense, id: Date.now() }));
+  const handleSaveExpense = async (expense) => {
+    try {
+      if (selectedExpense) {
+        dispatch(updateExpenseAsync({ id: selectedExpense._id, expenseData: expense }));
+      } else {
+        dispatch(addExpenseAsync(expense));
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Failed to save expense:", error);
     }
-    setIsModalOpen(false);
   };
 
   const handleResetFilters = () => {
     setFilters({
       category: "",
-      tags: "",
+      tag: "",
       startDate: null,
       endDate: null,
       amountRange: [0, 10000],
     });
   };
 
-  const filteredExpenses = recentExpenses.filter((expense) => {
+  const filteredExpenses = expenses.filter((expense) => {
     const matchesCategory = filters.category
       ? expense.category === filters.category
       : true;
-    const matchesTags = filters.tags
-      ? expense.tags === filters.tags
+    const matchesTag = filters.tag
+      ? expense.tag === filters.tag
       : true;
     const matchesStartDate = filters.startDate
       ? new Date(expense.date) >= new Date(filters.startDate)
@@ -92,7 +99,7 @@ const ExpensesPage = () => {
       expense.amount <= filters.amountRange[1];
     return (
       matchesCategory &&
-      matchesTags &&
+      matchesTag &&
       matchesStartDate &&
       matchesEndDate &&
       matchesAmountRange
@@ -148,3 +155,4 @@ const ExpensesPage = () => {
 };
 
 export default ExpensesPage;
+

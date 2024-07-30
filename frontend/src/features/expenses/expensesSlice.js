@@ -1,159 +1,35 @@
-import { createSlice } from "@reduxjs/toolkit";
-import {
-  parseISO,
-  format,
-  subMonths,
-  eachMonthOfInterval,
-  isWithinInterval,
-} from "date-fns";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { subMonths, parseISO, format, eachMonthOfInterval } from "date-fns";
+import { fetchExpenses, addExpense, updateExpense, deleteExpense as deleteExpenseFromService } from "../../api/expenseService";
+
+export const fetchExpensesAsync = createAsyncThunk(
+  "expenses/fetchExpenses",
+  async () => {
+    const expenses = await fetchExpenses();
+    return expenses;
+  }
+);
+
+export const addExpenseAsync = createAsyncThunk("expenses/addExpense", async (expenseData, thunkAPI) => {
+  try {
+    const newExpense = await addExpense(expenseData);
+    return newExpense;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data);
+  }
+})
+
+export const updateExpenseAsync = createAsyncThunk('expenses/updateExpense', async ({ id, expenseData }, thunkAPI) => {
+  try {
+    const updatedExpense = await updateExpense(id, expenseData);
+    return updatedExpense;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data);
+  }
+});
 
 const initialState = {
-  expenses: [
-    {
-      id: 1,
-      date: "2023-01-15",
-      category: "Utilities",
-      amount: 100,
-      tags: "Monthly",
-      notes: "",
-    },
-    {
-      id: 2,
-      date: "2023-02-20",
-      category: "Food",
-      amount: 200,
-      tags: "Monthly",
-      notes: "",
-    },
-    {
-      id: 3,
-      date: "2023-03-05",
-      category: "Entertainment",
-      amount: 150,
-      tags: "One-time",
-      notes: "Concert tickets",
-    },
-    {
-      id: 4,
-      date: "2023-04-10",
-      category: "Transportation",
-      amount: 300,
-      tags: "Monthly",
-      notes: "Car maintenance",
-    },
-    {
-      id: 5,
-      date: "2023-05-25",
-      category: "Rent",
-      amount: 500,
-      tags: "Monthly",
-      notes: "",
-    },
-    {
-      id: 6,
-      date: "2023-06-15",
-      category: "Utilities",
-      amount: 120,
-      tags: "Monthly",
-      notes: "",
-    },
-    {
-      id: 7,
-      date: "2023-07-02",
-      category: "Rent",
-      amount: 500,
-      tags: "Monthly",
-      notes: "",
-    },
-    {
-      id: 8,
-      date: "2023-08-03",
-      category: "Food",
-      amount: 180,
-      tags: "Monthly",
-      notes: "",
-    },
-    {
-      id: 9,
-      date: "2023-09-10",
-      category: "Entertainment",
-      amount: 250,
-      tags: "One-time",
-      notes: "Theater tickets",
-    },
-    {
-      id: 10,
-      date: "2023-10-12",
-      category: "Transportation",
-      amount: 400,
-      tags: "Monthly",
-      notes: "Public transport pass",
-    },
-    {
-      id: 11,
-      date: "2023-11-18",
-      category: "Healthcare",
-      amount: 200,
-      tags: "One-time",
-      notes: "Medical check-up",
-    },
-    {
-      id: 12,
-      date: "2023-12-22",
-      category: "Shopping",
-      amount: 300,
-      tags: "One-time",
-      notes: "Holiday gifts",
-    },
-    {
-      id: 13,
-      date: "2024-01-05",
-      category: "Travel",
-      amount: 800,
-      tags: "One-time",
-      notes: "Vacation",
-    },
-    {
-      id: 14,
-      date: "2024-02-14",
-      category: "Education",
-      amount: 150,
-      tags: "Monthly",
-      notes: "Online course",
-    },
-    {
-      id: 15,
-      date: "2024-03-08",
-      category: "Food",
-      amount: 220,
-      tags: "Monthly",
-      notes: "",
-    },
-    {
-      id: 16,
-      date: "2024-04-16",
-      category: "Rent",
-      amount: 550,
-      tags: "Monthly",
-      notes: "",
-    },
-    {
-      id: 17,
-      date: "2024-05-10",
-      category: "Utilities",
-      amount: 130,
-      tags: "Monthly",
-      notes: "",
-    },
-    {
-      id: 18,
-      date: "2024-06-18",
-      category: "Entertainment",
-      amount: 300,
-      tags: "One-time",
-      notes: "Concert tickets",
-    },
-  ],
+  expenses: [],
   loading: false,
   error: null,
 };
@@ -162,55 +38,64 @@ const expensesSlice = createSlice({
   name: "expenses",
   initialState,
   reducers: {
-    addExpense: (state, action) => {
-      state.expenses.push({
-        ...action.payload,
-        amount: parseFloat(action.payload.amount),
-      });
-    },
-    editExpense: (state, action) => {
-      const index = state.expenses.findIndex(
-        (expense) => expense.id === action.payload.id
-      );
-      if (index !== -1) {
-        state.expenses[index] = {
-          ...action.payload,
-          amount: parseFloat(action.payload.amount),
-        };
-      }
-    },
     deleteExpense: (state, action) => {
       state.expenses = state.expenses.filter(
         (expense) => expense.id !== action.payload
       );
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchExpensesAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchExpensesAsync.fulfilled, (state, action) => {
+        state.expenses = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchExpensesAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(addExpenseAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addExpenseAsync.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(addExpenseAsync.rejected, (state, action) => {
+        state.expenses.push(action.payload);
+        state.loading = false;
+      })
+      .addCase(updateExpenseAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateExpenseAsync.fulfilled, (state, action) => {
+        const index = state.expenses.findIndex(expense => expense.id === action.payload.id);
+        if (index !== -1) {
+          state.expenses[index] = action.payload;
+        }
+        state.loading = false;
+      })
+      .addCase(updateExpenseAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
 });
 
-export const { addExpense, editExpense, deleteExpense } = expensesSlice.actions;
-
-export const selectRecentExpenses = (state) => {
-  const endDate = new Date();
-  const startDate = subMonths(endDate, 11);
-
-  return state.expenses.expenses
-    .filter((expense) =>
-      isWithinInterval(parseISO(expense.date), {
-        start: startDate,
-        end: endDate,
-      })
-    )
-    .sort((a, b) => new Date(b.date) - new Date(a.date));
-};
+export const { deleteExpense } = expensesSlice.actions;
 
 export const selectTotalExpenses = (state) => {
-  const recentExpenses = selectRecentExpenses(state);
-  return recentExpenses.reduce((total, expense) => total + expense.amount, 0);
+  return state.expenses.expenses.reduce((total, expense) => total + expense.amount, 0);
 };
 
 export const selectExpenseTrendsData = (state) => {
-  const recentExpenses = selectRecentExpenses(state);
-
+  const expenses = state.expenses.expenses;
   const months = eachMonthOfInterval({
     start: subMonths(new Date(), 11),
     end: new Date(),
@@ -222,7 +107,7 @@ export const selectExpenseTrendsData = (state) => {
     return acc;
   }, {});
 
-  recentExpenses.forEach((expense) => {
+  expenses.forEach((expense) => {
     const month = format(parseISO(expense.date), "yyyy-MM");
     aggregatedData[month] += parseFloat(expense.amount);
   });
@@ -239,3 +124,4 @@ export const selectExpenseTrendsData = (state) => {
 };
 
 export default expensesSlice.reducer;
+
