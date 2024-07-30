@@ -11,11 +11,42 @@ const Income = require('./models/Income');
 mongoose.connect(process.env.MONGO_URI, {
 });
 
+const categories = [
+  "Food",
+  "Rent",
+  "Utilities",
+  "Transportation",
+  "Entertainment",
+  "Healthcare",
+  "Education",
+  "Commute",
+  "Insurance",
+  "Shopping",
+  "Travel",
+  "Grocery",
+  "Miscellaneous",
+];
+
+const tags = ["one-time", "monthly", "recurring"];
+
+const getRandomDate = () => {
+  const now = new Date();
+  const pastYear = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+  return new Date(pastYear.getTime() + Math.random() * (now.getTime() - pastYear.getTime()));
+};
+
+const getRandomCategory = () => {
+  return categories[Math.floor(Math.random() * categories.length)];
+};
+
+const getRandomTag = () => {
+  return tags[Math.floor(Math.random() * tags.length)];
+};
+
 const seedDB = async () => {
   await User.deleteMany({});
   await Expense.deleteMany({});
   await Income.deleteMany({});
-
 
   const user = new User({
     name: 'Test User',
@@ -31,35 +62,21 @@ const seedDB = async () => {
 
   await user.save();
 
-  const expenses = [
-    { date: new Date(), category: 'Food', amount: 10, tag: 'one-time', notes: 'Lunch' },
-    { date: new Date(), category: 'Transport', amount: 20, tag: 'one-time', notes: 'Bus fare' },
-    { date: new Date(), category: 'Entertainment', amount: 50, tag: 'one-time', notes: 'Movie tickets' },
-    { date: new Date(), category: 'Utilities', amount: 100, tag: 'monthly', notes: 'Electricity bill' },
-    { date: new Date(), category: 'Groceries', amount: 30, tag: 'monthly', notes: 'Grocery shopping' },
-    { date: new Date(), category: 'Health', amount: 200, tag: 'one-time', notes: 'Doctor visit' },
-    { date: new Date(), category: 'Food', amount: 15, tag: 'one-time', notes: 'Dinner' },
-    { date: new Date(), category: 'Transport', amount: 25, tag: 'one-time', notes: 'Taxi fare' },
-    { date: new Date(), category: 'Entertainment', amount: 60, tag: 'one-time', notes: 'Concert tickets' },
-    { date: new Date(), category: 'Utilities', amount: 120, tag: 'monthly', notes: 'Water bill' },
-    { date: new Date(), category: 'Groceries', amount: 40, tag: 'monthly', notes: 'Grocery shopping' },
-    { date: new Date(), category: 'Health', amount: 250, tag: 'one-time', notes: 'Dentist visit' },
-    { date: new Date(), category: 'Food', amount: 20, tag: 'one-time', notes: 'Breakfast' },
-    { date: new Date(), category: 'Transport', amount: 30, tag: 'one-time', notes: 'Train fare' },
-    { date: new Date(), category: 'Entertainment', amount: 70, tag: 'one-time', notes: 'Theater tickets' },
-  ];
+  const expenses = Array.from({ length: 15 }).map(() => ({
+    date: getRandomDate(),
+    category: getRandomCategory(),
+    amount: Math.floor(Math.random() * 500) + 1,
+    tag: getRandomTag(),
+    notes: 'Seeded expense',
+  }));
 
-  const incomes = [
-    { date: new Date(), category: 'Salary', amount: 2000, tag: 'monthly', notes: 'Monthly salary' },
-    { date: new Date(), category: 'Freelance', amount: 500, tag: 'one-time', notes: 'Freelance project' },
-    { date: new Date(), category: 'Investment', amount: 300, tag: 'quarterly', notes: 'Stock dividends' },
-    { date: new Date(), category: 'Salary', amount: 2100, tag: 'monthly', notes: 'Monthly salary' },
-    { date: new Date(), category: 'Freelance', amount: 600, tag: 'one-time', notes: 'Freelance project' },
-    { date: new Date(), category: 'Investment', amount: 350, tag: 'quarterly', notes: 'Stock dividends' },
-    { date: new Date(), category: 'Salary', amount: 2200, tag: 'monthly', notes: 'Monthly salary' },
-    { date: new Date(), category: 'Freelance', amount: 700, tag: 'one-time', notes: 'Freelance project' },
-    { date: new Date(), category: 'Investment', amount: 400, tag: 'quarterly', notes: 'Stock dividends' },
-  ];
+  const incomes = Array.from({ length: 9 }).map(() => ({
+    date: getRandomDate(),
+    category: 'Salary', // Assuming income categories are predefined
+    amount: Math.floor(Math.random() * 3000) + 1000,
+    tag: 'monthly',
+    notes: 'Seeded income',
+  }));
 
   for (const expense of expenses) {
     const newExpense = new Expense({
