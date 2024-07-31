@@ -39,7 +39,6 @@ const initialState = {
   incomes: [],
   loading: false,
   error: null,
-  lastFetched: null,
 };
 
 const incomeSlice = createSlice({
