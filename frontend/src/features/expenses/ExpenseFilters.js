@@ -33,7 +33,7 @@ const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense, handleReset
   };
 
   const handleTagChange = (e) => {
-    onFilterChange("tags", e.target.value);
+    onFilterChange("tag", e.target.value);
   };
 
   const handleStartDateChange = (date) => {
@@ -93,8 +93,8 @@ const ExpenseFilters = ({ filters, onFilterChange, handleAddExpense, handleReset
               </TextField>
               <TextField
                 select
-                label="Tags"
-                value={filters.tags}
+                label="Tag"
+                value={filters.tag}
                 onChange={handleTagChange}
                 variant="outlined"
                 size="medium"

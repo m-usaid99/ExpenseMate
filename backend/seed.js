@@ -11,7 +11,7 @@ const Income = require('./models/Income');
 mongoose.connect(process.env.MONGO_URI, {
 });
 
-const categories = [
+const expenseCategories = [
   "Food",
   "Rent",
   "Utilities",
@@ -27,7 +27,15 @@ const categories = [
   "Miscellaneous",
 ];
 
-const tags = ["one-time", "monthly", "recurring"];
+const incomeCategories = [
+  "Salary",
+  "Investment",
+  "Freelance",
+  "Other",
+];
+
+const expenseTags = ["one-time", "monthly", "recurring"];
+const incomeTags = ["one-time", "monthly", "quarterly"];
 
 const getRandomDate = () => {
   const now = new Date();
@@ -35,12 +43,21 @@ const getRandomDate = () => {
   return new Date(pastYear.getTime() + Math.random() * (now.getTime() - pastYear.getTime()));
 };
 
-const getRandomCategory = () => {
-  return categories[Math.floor(Math.random() * categories.length)];
+const getRandomCategory = (type) => {
+  if (type === 'expense') {
+    return expenseCategories[Math.floor(Math.random() * expenseCategories.length)];
+  } else {
+    return incomeCategories[Math.floor(Math.random() * incomeCategories.length)];
+
+  }
 };
 
-const getRandomTag = () => {
-  return tags[Math.floor(Math.random() * tags.length)];
+const getRandomExpenseTag = () => {
+  return expenseTags[Math.floor(Math.random() * expenseTags.length)];
+};
+
+const getRandomIncomeTag = () => {
+  return incomeTags[Math.floor(Math.random() * incomeTags.length)];
 };
 
 const seedDB = async () => {
@@ -64,17 +81,17 @@ const seedDB = async () => {
 
   const expenses = Array.from({ length: 15 }).map(() => ({
     date: getRandomDate(),
-    category: getRandomCategory(),
+    category: getRandomCategory('expense'),
     amount: Math.floor(Math.random() * 500) + 1,
-    tag: getRandomTag(),
+    tag: getRandomExpenseTag(),
     notes: 'Seeded expense',
   }));
 
   const incomes = Array.from({ length: 9 }).map(() => ({
     date: getRandomDate(),
-    category: 'Salary', // Assuming income categories are predefined
+    category: getRandomCategory('income'),
     amount: Math.floor(Math.random() * 3000) + 1000,
-    tag: 'monthly',
+    tag: getRandomIncomeTag(),
     notes: 'Seeded income',
   }));
 
