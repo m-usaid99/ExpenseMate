@@ -2,13 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { subMonths, parseISO, format, eachMonthOfInterval } from "date-fns";
 import { fetchExpenses, addExpense, updateExpense, deleteExpense } from "../../api/expenseService";
 
-export const fetchExpensesAsync = createAsyncThunk(
-  "expenses/fetchExpenses",
-  async () => {
-    const expenses = await fetchExpenses();
-    return expenses;
-  }
-);
+export const fetchExpensesAsync = createAsyncThunk('expenses/fetchExpenses', async () => {
+  const response = await fetchExpenses();
+  return response;
+});
 
 export const addExpenseAsync = createAsyncThunk("expenses/addExpense", async (expenseData, thunkAPI) => {
   try {
@@ -47,13 +44,7 @@ const initialState = {
 const expensesSlice = createSlice({
   name: "expenses",
   initialState,
-  reducers: {
-    deleteExpense: (state, action) => {
-      state.expenses = state.expenses.filter(
-        (expense) => expense.id !== action.payload
-      );
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchExpensesAsync.pending, (state) => {
@@ -63,6 +54,7 @@ const expensesSlice = createSlice({
       .addCase(fetchExpensesAsync.fulfilled, (state, action) => {
         state.expenses = action.payload;
         state.loading = false;
+        state.lastFetched = Date.now();
       })
       .addCase(fetchExpensesAsync.rejected, (state, action) => {
         state.loading = false;

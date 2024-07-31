@@ -2,13 +2,8 @@
 import React from 'react';
 import { Grid } from '@mui/material';
 import SummaryCard from './SummaryCard';
-import { useSelector } from 'react-redux';
-import { selectTotalExpenses } from '../features/expenses/expensesSlice';
-import { selectTotalIncome } from '../features/income/incomeSlice';
 
-const SummaryCardsSection = () => {
-  const totalExpenses = useSelector(selectTotalExpenses);
-  const totalIncome = useSelector(selectTotalIncome);
+const SummaryCardsSection = ({ totalExpenses, totalIncome }) => {
   return (
     <Grid container spacing={3} justifyContent="center">
       <Grid item xs={12} sm={6}>

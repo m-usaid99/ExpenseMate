@@ -3,10 +3,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchIncomes, addIncome, updateIncome, deleteIncome } from '../../api/incomeService';
 import { parseISO, format, subMonths, eachMonthOfInterval } from 'date-fns';
 
-// Thunks for asynchronous operations
-export const fetchIncomesAsync = createAsyncThunk('income/fetchIncomes', async () => {
-  const incomes = await fetchIncomes();
-  return incomes;
+export const fetchIncomesAsync = createAsyncThunk('expenses/fetchIncomes', async () => {
+  const response = await fetchIncomes();
+  return response;
 });
 
 export const addIncomeAsync = createAsyncThunk('income/addIncome', async (incomeData, thunkAPI) => {
@@ -40,6 +39,7 @@ const initialState = {
   incomes: [],
   loading: false,
   error: null,
+  lastFetched: null,
 };
 
 const incomeSlice = createSlice({
@@ -61,6 +61,7 @@ const incomeSlice = createSlice({
       .addCase(fetchIncomesAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.lastFetched = Date.now();
       })
       .addCase(addIncomeAsync.pending, (state) => {
         state.loading = true;
