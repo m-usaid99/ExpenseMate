@@ -8,6 +8,9 @@ import {
   Button,
   MenuItem,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { addIncomeAsync, updateIncomeAsync } from "./incomeSlice";
+import { format, parseISO } from "date-fns";
 
 const categories = [
   "Salary",
@@ -16,29 +19,33 @@ const categories = [
   "Other",
 ];
 
-const tags = ["Monthly", "One-time", "Quarterly"];
+const tags = ["monthly", "one-time", "quarterly"];
 
-const IncomeModal = ({ open, onClose, onSave, income }) => {
+const IncomeModal = ({ open, onClose, income }) => {
+  const dispatch = useDispatch();
   const [form, setForm] = useState({
-    date: new Date().toISOString().split("T")[0], // Default to today's date
+    date: format(new Date(), "yyyy-MM-dd"),
     category: "",
     amount: "",
-    tags: "",
+    tag: "",
     notes: "",
   });
 
   useEffect(() => {
     if (income) {
       setForm({
-        ...income,
+        date: format(parseISO(income.date), "yyyy-MM-dd"),
+        category: income.category || "", // Ensure category is set or default to empty string
         amount: income.amount.toString(), // Ensure amount is treated as string for the input
+        tag: income.tag || "", // Ensure tag is set or default to empty string
+        notes: income.notes || "", // Ensure notes are set or default to empty string      
       });
     } else {
       setForm({
         date: new Date().toISOString().split("T")[0], // Default to today's date
         category: "",
         amount: "",
-        tags: "", 
+        tag: "",
         notes: "",
       });
     }
@@ -54,15 +61,28 @@ const IncomeModal = ({ open, onClose, onSave, income }) => {
   const handleTagChange = (e) => {
     setForm((prevForm) => ({
       ...prevForm,
-      tags: e.target.value,
+      tag: e.target.value,
     }));
   };
 
   const handleSave = () => {
-    onSave({
+    const incomeData = {
       ...form,
       amount: parseFloat(form.amount), // Ensure amount is a number on save
-    });
+      date: parseISO(form.date).toISOString(), // Ensure date is properly formatted
+    };
+
+    // Validate data before dispatching
+    if (!incomeData.category || !incomeData.amount || !incomeData.date) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    if (income) {
+      dispatch(updateIncomeAsync({ id: income._id, incomeData }));
+    } else {
+      dispatch(addIncomeAsync(incomeData));
+    }
     onClose();
   };
 
@@ -106,8 +126,8 @@ const IncomeModal = ({ open, onClose, onSave, income }) => {
         />
         <TextField
           select
-          label="Tags"
-          value={form.tags}
+          label="Tag"
+          value={form.tag}
           onChange={handleTagChange}
           fullWidth
           margin="normal"

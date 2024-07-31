@@ -29,14 +29,14 @@ const IncomeList = ({ income, onEdit, onDelete }) => {
               <TableCell>Date</TableCell>
               <TableCell>Category</TableCell>
               <TableCell>Amount</TableCell>
-              <TableCell>Tags</TableCell>
+              <TableCell>Tag</TableCell>
               <TableCell>Notes</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {income.map((inc) => (
-              <TableRow key={inc.id} sx={{ fontSize: "1rem" }}>
+              <TableRow key={inc._id} sx={{ fontSize: "1rem" }}>
                 <TableCell>{inc.date}</TableCell>
                 <TableCell>
                   {categoryIcons[inc.category] ||
@@ -44,13 +44,13 @@ const IncomeList = ({ income, onEdit, onDelete }) => {
                   {inc.category}
                 </TableCell>
                 <TableCell>{inc.amount}</TableCell>
-                <TableCell>{inc.tags}</TableCell>
+                <TableCell>{inc.tag}</TableCell>
                 <TableCell>{inc.notes}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => onEdit(inc)}>
                     <Edit />
                   </IconButton>
-                  <IconButton onClick={() => onDelete(inc.id)}>
+                  <IconButton onClick={() => onDelete(inc._id)}>
                     <Delete />
                   </IconButton>
                 </TableCell>

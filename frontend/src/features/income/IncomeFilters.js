@@ -6,11 +6,12 @@ import { useSelector } from "react-redux";
 
 const categories = ["Salary", "Freelance", "Investment", "Other"];
 
-const tags = ["Monthly", "One-time", "Quarterly"];
+const tags = ["monthly", "one-time", "quarterly"];
 
 const IncomeFilters = ({ filters, onFilterChange, handleAddIncome, handleResetFilters }) => {
-  const income = useSelector((state) => state.income.income);
-  const maxIncome = Math.max(...income.map((inc) => inc.amount), 0);
+  const incomes = useSelector((state) => state.income.incomes);
+  console.log(incomes);
+  const maxIncome = Math.max(...incomes.map((inc) => inc.amount), 0);
 
   const [startDate, setStartDate] = useState(filters.startDate || null);
 
@@ -19,7 +20,7 @@ const IncomeFilters = ({ filters, onFilterChange, handleAddIncome, handleResetFi
   };
 
   const handleTagChange = (e) => {
-    onFilterChange("tags", e.target.value);
+    onFilterChange("tag", e.target.value);
   };
 
   const handleStartDateChange = (date) => {
@@ -79,8 +80,8 @@ const IncomeFilters = ({ filters, onFilterChange, handleAddIncome, handleResetFi
               </TextField>
               <TextField
                 select
-                label="Tags"
-                value={filters.tags}
+                label="Tag"
+                value={filters.tag}
                 onChange={handleTagChange}
                 variant="outlined"
                 size="medium"

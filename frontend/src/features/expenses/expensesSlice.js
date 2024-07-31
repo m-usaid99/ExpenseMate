@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { subMonths, parseISO, format, eachMonthOfInterval } from "date-fns";
-import { fetchExpenses, addExpense, updateExpense, deleteExpense as deleteExpenseFromService } from "../../api/expenseService";
+import { fetchExpenses, addExpense, updateExpense, deleteExpense } from "../../api/expenseService";
 
 export const fetchExpensesAsync = createAsyncThunk(
   "expenses/fetchExpenses",
@@ -27,6 +27,16 @@ export const updateExpenseAsync = createAsyncThunk('expenses/updateExpense', asy
     return thunkAPI.rejectWithValue(error.response.data);
   }
 });
+
+export const deleteExpenseAsync = createAsyncThunk("expenses/deleteExpense",
+  async (id, thunkAPI) => {
+    try {
+      await deleteExpense(id);
+      return id;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  });
 
 const initialState = {
   expenses: [],
@@ -84,11 +94,21 @@ const expensesSlice = createSlice({
       .addCase(updateExpenseAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      .addCase(deleteExpenseAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteExpenseAsync.fulfilled, (state, action) => {
+        state.incomes = state.expenses.filter(income => income._id !== action.payload);
+        state.loading = false;
+      })
+      .addCase((deleteExpenseAsync.rejected), (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
   },
 });
-
-export const { deleteExpense } = expensesSlice.actions;
 
 export const selectTotalExpenses = (state) => {
   return state.expenses.expenses.reduce((total, expense) => total + expense.amount, 0);

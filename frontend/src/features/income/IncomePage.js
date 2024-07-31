@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, Container, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addIncome,
-  editIncome,
-  deleteIncome,
-  selectRecentIncome,
+  addIncomeAsync,
+  updateIncomeAsync,
+  deleteIncomeAsync,
   selectTotalIncome,
   selectIncomeTrendsData,
+  fetchIncomesAsync,
 } from "./incomeSlice";
 import IncomeList from "./IncomeList";
 import IncomeFilters from "./IncomeFilters";
@@ -18,20 +18,22 @@ import IncomeTrends from "./IncomeTrends";
 
 const IncomePage = () => {
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.income);
-  const recentIncome = useSelector(selectRecentIncome);
+  const { incomes, loading, error } = useSelector((state) => state.income);
   const totalIncome = useSelector(selectTotalIncome);
   const incomeTrendsData = useSelector(selectIncomeTrendsData);
-  const maxIncome = Math.max(...recentIncome.map((inc) => inc.amount), 0);
   const [filters, setFilters] = useState({
     category: "",
-    tags: "",
+    tag: "",
     startDate: null,
     endDate: null,
-    amountRange: [0, maxIncome],
+    amountRange: [0, 10000],
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedIncome, setSelectedIncome] = useState(null);
+
+  useEffect(() => {
+    dispatch(fetchIncomesAsync());
+  }, [dispatch]);
 
   const handleFilterChange = (field, value) => {
     setFilters((prevFilters) => ({ ...prevFilters, [field]: value }));
@@ -47,17 +49,25 @@ const IncomePage = () => {
     setIsModalOpen(true);
   };
 
-  const handleDeleteIncome = (id) => {
-    dispatch(deleteIncome(id));
+  const handleDeleteIncome = async (id) => {
+    try {
+      await dispatch(deleteIncomeAsync(id));
+    } catch (error) {
+      console.error("Failed to delete income:", error);
+    }
   };
 
-  const handleSaveIncome = (income) => {
-    if (selectedIncome) {
-      dispatch(editIncome(income));
-    } else {
-      dispatch(addIncome({ ...income, id: Date.now() }));
+  const handleSaveIncome = async (income) => {
+    try {
+      if (selectedIncome) {
+        await dispatch(updateIncomeAsync({ id: selectedIncome._id, incomeData: income }));
+      } else {
+        await dispatch(addIncomeAsync(income));
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Failed to save income:", error);
     }
-    setIsModalOpen(false);
   };
 
   const handleResetFilters = () => {
@@ -66,15 +76,15 @@ const IncomePage = () => {
       tags: "",
       startDate: null,
       endDate: null,
-      amountRange: [0, maxIncome],
+      amountRange: [0, 10000],
     });
   };
 
-  const filteredIncome = recentIncome.filter((income) => {
+  const filteredIncome = incomes.filter((income) => {
     const matchesCategory = filters.category
       ? income.category === filters.category
       : true;
-    const matchesTags = filters.tags ? income.tags === filters.tags : true;
+    const matchesTags = filters.tag ? income.tag === filters.tag : true;
     const matchesStartDate = filters.startDate
       ? new Date(income.date) >= new Date(filters.startDate)
       : true;
@@ -92,9 +102,6 @@ const IncomePage = () => {
       matchesAmountRange
     );
   });
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
 
   return (
     <Layout>

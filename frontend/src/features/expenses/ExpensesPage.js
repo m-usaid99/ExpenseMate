@@ -5,7 +5,7 @@ import {
   fetchExpensesAsync,
   addExpenseAsync,
   updateExpenseAsync,
-  deleteExpense,
+  deleteExpenseAsync,
   selectTotalExpenses,
   selectExpenseTrendsData,
 } from "./expensesSlice";
@@ -51,8 +51,7 @@ const ExpensesPage = () => {
 
   const handleDeleteExpense = async (id) => {
     try {
-      await deleteExpense(id);
-      dispatch(deleteExpense(id));
+      await dispatch(deleteExpenseAsync(id));
     } catch (error) {
       console.error("Failed to delete expense:", error);
     }
@@ -105,9 +104,6 @@ const ExpensesPage = () => {
       matchesAmountRange
     );
   });
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
 
   return (
     <Layout>
