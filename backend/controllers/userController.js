@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
+const sendEmail = require('../utils/sendEmail');
 const crypto = require('crypto');
 
 // @desc    Register a new User
@@ -45,7 +46,6 @@ const authUser = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
   console.log(`Attempting login for email: ${email}`);
-  console.log(user);
 
   if (user && (await user.matchPassword(password))) {
     res.json({
@@ -171,26 +171,37 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
     throw new Error('User not found');
   }
 
-  // Generate and hash reset token
   const resetToken = crypto.randomBytes(32).toString('hex');
   user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
   user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
 
-  // console.log('Generated reset token: ', resetToken);
-  // console.log('Hashed reset token: ', user.resetPasswordToken);
   await user.save();
 
-  // console.log('User after saving reset token:', await User.findOne({ email }));
-  res.status(200).json({ resetToken });
+  const resetUrl = `${req.protocol}://${req.get('host')}/reset-password/${resetToken}`;
+
+  const message = `You are receiving this email because you (or someone else) have requested the reset of a password. Please click the link below to reset your password: \n\n ${resetUrl}`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'Password Reset Requested',
+      message,
+    })
+    res.status(200).json({ message: 'Email sent' });
+  } catch (error) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+    res.status(500);
+    throw new Error('Email could not be sent');
+  }
 });
+
 const resetPassword = asyncHandler(async (req, res) => {
   const { password } = req.body;
   const { token } = req.params;
 
-  // Hash the token
   const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-  // console.log(`Received reset token: ${token}`);
-  //  console.log(`Hashed reset token for comparison: ${hashedToken}`);
 
   const user = await User.findOne({
     resetPasswordToken: hashedToken,
@@ -204,6 +215,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   }
 
   user.password = password;
+  console.log(user);
   user.resetPasswordToken = undefined;
   user.resetPasswordExpires = undefined;
 
