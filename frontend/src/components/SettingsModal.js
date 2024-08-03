@@ -39,7 +39,7 @@ const SettingsModal = ({ open, handleClose }) => {
             />
           }
           label="Switch To Dark Mode"
-          sx={{marginTop: 1}}
+          sx={{ marginTop: 1 }}
         />
         <Box sx={{ mt: 2 }}>
           <Typography variant="subtitle1">Notifications</Typography>
