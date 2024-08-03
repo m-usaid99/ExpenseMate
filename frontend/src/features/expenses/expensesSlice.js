@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { subMonths, parseISO, format, eachMonthOfInterval } from "date-fns";
+import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
+import { subMonths, parseISO, format, startOfMonth, endOfMonth, eachMonthOfInterval } from "date-fns";
 import { fetchExpenses, addExpense, updateExpense, deleteExpense } from "../../api/expenseService";
 
 export const fetchExpensesAsync = createAsyncThunk('expenses/fetchExpenses', async () => {
@@ -134,6 +134,18 @@ export const selectExpenseTrendsData = (state) => {
   console.log(data);
   return { labels, data };
 };
+
+export const selectCurrentMonthExpenses = createSelector(
+  [(state) => state.expenses.expenses],
+  (expenses) => {
+    const start = startOfMonth(new Date());
+    const end = endOfMonth(new Date());
+    return expenses.filter((expense) => {
+      const date = parseISO(expense.date);
+      return date >= start && date <= end;
+    });
+  }
+);
 
 export default expensesSlice.reducer;
 
