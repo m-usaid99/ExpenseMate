@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
-import { useParams, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { requestPasswordResetAsync } from '../features/user/userSlice';
 
 

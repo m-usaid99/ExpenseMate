@@ -11,6 +11,7 @@ import {
   Box,
 } from "@mui/material";
 import { Edit, Delete, AttachMoney, Computer, LocalAtm, Category } from "@mui/icons-material";
+import { format, parseISO } from 'date-fns';
 
 const categoryIcons = {
   Salary: <AttachMoney />,
@@ -37,7 +38,7 @@ const IncomeList = ({ income, onEdit, onDelete }) => {
           <TableBody>
             {income.map((inc) => (
               <TableRow key={inc._id} sx={{ fontSize: "1rem" }}>
-                <TableCell>{inc.date}</TableCell>
+                <TableCell>{format(parseISO(inc.date), 'yyyy-MM-dd')}</TableCell>
                 <TableCell>
                   {categoryIcons[inc.category] ||
                     categoryIcons["Miscellaneous"]}{" "}

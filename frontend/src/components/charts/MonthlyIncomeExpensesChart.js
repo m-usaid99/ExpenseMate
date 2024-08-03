@@ -4,7 +4,7 @@ import { BarChart } from "@mui/x-charts";
 import { useSelector } from "react-redux";
 import { selectExpenseTrendsData } from "../../features/expenses/expensesSlice";
 import { selectIncomeTrendsData } from "../../features/income/incomeSlice";
-import { subMonths, format } from "date-fns";
+import { subMonths } from "date-fns";
 
 const MonthlyIncomeExpensesChart = () => {
   const theme = useTheme();

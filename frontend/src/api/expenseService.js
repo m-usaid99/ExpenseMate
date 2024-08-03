@@ -13,7 +13,6 @@ export const fetchExpenses = async () => {
         endDate: format(endDate, 'yyyy-MM-dd'),
       },
     });
-    console.log('Fetched Expenses:', response.data); // Log response
     return response.data;
   } catch (error) {
     console.error('Error fetching expenses:', error); // Log error

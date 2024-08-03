@@ -10,7 +10,6 @@ const tags = ["monthly", "one-time", "quarterly"];
 
 const IncomeFilters = ({ filters, onFilterChange, handleAddIncome, handleResetFilters }) => {
   const incomes = useSelector((state) => state.income.incomes);
-  console.log(incomes);
   const maxIncome = Math.max(...incomes.map((inc) => inc.amount), 0);
 
   const [startDate, setStartDate] = useState(filters.startDate || null);

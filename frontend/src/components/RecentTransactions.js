@@ -14,8 +14,6 @@ import ExpenseIcon from "@mui/icons-material/RemoveCircleOutline";
 import IncomeIcon from "@mui/icons-material/AddCircleOutline";
 import { useSelector } from "react-redux";
 import { format, parseISO } from 'date-fns';
-import { selectExpenses } from "../features/expenses/expensesSlice"; // Update the import to match your slice
-import { selectIncome } from "../features/income/incomeSlice"; // Update the import to match your slice
 
 const RecentTransactions = () => {
   const theme = useTheme();

@@ -6,8 +6,6 @@ const ExpenseTrends = ({ data }) => {
   const { labels, data: expenseData } = data;
   const theme = useTheme();
 
-  console.log("Expense Trends Component Data:", data);
-
   return (
     <Paper sx={{ padding: 2, marginBottom: 3 }}>
       <Typography variant="h5">Expense Trends</Typography>
