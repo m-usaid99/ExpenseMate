@@ -7,6 +7,7 @@ import Layout from "../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchIncomesAsync, selectTotalIncome } from "../features/income/incomeSlice";
 import { fetchExpensesAsync, selectTotalExpenses } from "../features/expenses/expensesSlice";
+import RecentTransactions from "../components/RecentTransactions";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const Dashboard = () => {
         </Typography>
         <SummaryCardsSection totalExpenses={totalExpenses} totalIncome={totalIncome} />
         <ChartsSection />
+        <RecentTransactions />
       </Container>
     </Layout>
   );

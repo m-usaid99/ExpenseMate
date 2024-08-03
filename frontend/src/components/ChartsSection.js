@@ -1,39 +1,25 @@
 // src/components/ChartsSection.js
 import React from 'react';
-import { Grid, Card, CardContent, Typography } from '@mui/material';
+import { Box, Typography, Paper } from '@mui/material';
 import ExpenseBreakdownChart from './charts/ExpenseBreakdownChart';
-import IncomeVsExpensesChart from './charts/IncomeVsExpensesChart';
+import MonthlyIncomeExpensesChart from './charts/MonthlyIncomeExpensesChart';
 import BudgetTrackingChart from './charts/BudgetTrackingChart';
 
 const ChartsSection = () => {
   return (
-    <Grid container spacing={3} sx={{ mt: 3 }}>
-      <Grid item xs={12} md={6}>
-        <Card>
-          <CardContent>
-            <Typography variant="h6">Expense Breakdown</Typography>
-            <ExpenseBreakdownChart />
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <Card>
-          <CardContent>
-            <Typography variant="h6">Income vs. Expenses</Typography>
-            <IncomeVsExpensesChart />
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12}>
-        <Card>
-          <CardContent>
-            <Typography variant="h6">Budget Tracking</Typography>
-            <BudgetTrackingChart />
-          </CardContent>
-        </Card>
-      </Grid>
-    </Grid>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 3 }}>
+      <Paper sx={{ padding: 2 }}>
+        <Typography variant="h6">Expense Breakdown</Typography>
+        <ExpenseBreakdownChart />
+      </Paper>
+      <MonthlyIncomeExpensesChart />
+      <Paper sx={{ padding: 2 }}>
+        <Typography variant="h6">Budget Tracking</Typography>
+        <BudgetTrackingChart />
+      </Paper>
+    </Box>
   );
 };
 
 export default ChartsSection;
+

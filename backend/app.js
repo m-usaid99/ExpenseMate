@@ -25,7 +25,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Error Handling Middleware
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
-const { required } = require('joi');
 app.use(notFound);
 app.use(errorHandler);
 

@@ -9,6 +9,8 @@ import IncomePage from './features/income/IncomePage';
 import Budget from './pages/Budget';
 import Reports from './pages/Reports';
 import RegistrationPage from './pages/RegistrationPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegistrationPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path='/reset-password/:token' element={<ResetPasswordPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/expenses" element={<ExpensesPage />} />

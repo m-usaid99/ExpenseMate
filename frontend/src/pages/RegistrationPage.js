@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Container, Typography, TextField, Button, Box, Alert } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { register } from '../features/user/userSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 const RegistrationPage = () => {
@@ -119,6 +119,9 @@ const RegistrationPage = () => {
           >
             Register
           </Button>
+          <Link to='/'>
+            <Button variant='text'>Login</Button>
+          </Link>
           {error && (
             <Alert severity="error">
               {error}

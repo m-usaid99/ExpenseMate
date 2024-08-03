@@ -19,3 +19,22 @@ export const register = async (userData) => {
   return response.data;
 };
 
+export const requestPasswordReset = async (email) => {
+  try {
+    const response = await apiClient.post('/users/request-reset', { email }, { skipAuth: true });
+    return response.data;
+  } catch (error) {
+    console.error('Error requesting password reset', error);
+    throw error;
+  }
+}
+
+export const resetPassword = async (token, password) => {
+  try {
+    const response = await apiClient.put(`/users/reset-password/${token}`, { password }, { skipAuth: true });
+    return response.data;
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    throw error;
+  }
+}

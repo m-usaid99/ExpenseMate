@@ -173,12 +173,12 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
 
   const resetToken = crypto.randomBytes(32).toString('hex');
   user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  console.log('token generated:', resetToken);
   user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
 
   await user.save();
 
-  const resetUrl = `${req.protocol}://${req.get('host')}/reset-password/${resetToken}`;
-
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
   const message = `You are receiving this email because you (or someone else) have requested the reset of a password. Please click the link below to reset your password: \n\n ${resetUrl}`;
 
   try {
@@ -201,6 +201,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   const { password } = req.body;
   const { token } = req.params;
 
+  // Hash the token
   const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
   const user = await User.findOne({
@@ -208,14 +209,12 @@ const resetPassword = asyncHandler(async (req, res) => {
     resetPasswordExpires: { $gt: Date.now() },
   });
 
-
   if (!user) {
     res.status(400);
     throw new Error('Invalid or expired token');
   }
 
   user.password = password;
-  console.log(user);
   user.resetPasswordToken = undefined;
   user.resetPasswordExpires = undefined;
 

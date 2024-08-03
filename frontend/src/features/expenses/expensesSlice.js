@@ -131,7 +131,7 @@ export const selectExpenseTrendsData = (state) => {
     format(parseISO(`${month}-01`), "MMMM")
   );
   const data = sortedMonths.map((month) => aggregatedData[month]);
-
+  console.log(data);
   return { labels, data };
 };
 

@@ -12,12 +12,11 @@ import {
 import ExpenseIcon from "@mui/icons-material/RemoveCircleOutline";
 import IncomeIcon from "@mui/icons-material/AddCircleOutline";
 import { useSelector } from "react-redux";
-import { selectRecentExpenses } from "../features/expenses/expensesSlice";
 
 const RecentTransactions = () => {
-  const recentExpenses = useSelector(selectRecentExpenses).map(expense => ({ ...expense, type: 'Expense' }));
-  const recentIncome = useSelector(selectRecentIncome).map(income => ({ ...income, type: 'Income' }));
-  const transactions = [...recentExpenses, ...recentIncome]
+  const expenses = useSelector((state) => state.expenses.expenses).map(expense => ({ ...expense, type: 'Expense' }));
+  const incomes = useSelector((state) => state.income.incomes).map(income => ({ ...income, type: 'Income' }));
+  const transactions = [...expenses, ...incomes]
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return (
@@ -43,7 +42,7 @@ const RecentTransactions = () => {
                     </Typography>
                     {transaction.tags && transaction.tags.length > 0 && (
                       <Typography component="span" variant="body2" color="textSecondary">
-                        {`  |  Tag: ${transaction.tags}`}
+                        {`  |  Tag: ${transaction.tag}`}
                       </Typography>
                     )}
                     {transaction.notes && (

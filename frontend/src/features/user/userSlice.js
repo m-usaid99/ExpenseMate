@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { login as apiLogin, register as apiRegister } from '../../api/userService';
+import {
+  login as apiLogin,
+  register as apiRegister,
+  requestPasswordReset,
+  resetPassword,
+} from '../../api/userService';
 
 export const login = createAsyncThunk('user/login', async (credentials, thunkAPI) => {
   try {
@@ -13,6 +18,24 @@ export const login = createAsyncThunk('user/login', async (credentials, thunkAPI
 export const register = createAsyncThunk('user/register', async (userData, thunkAPI) => {
   try {
     const response = await apiRegister(userData);
+    return response;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data);
+  }
+});
+
+export const requestPasswordResetAsync = createAsyncThunk('user/requestPasswordReset', async ({ email }, thunkAPI) => {
+  try {
+    const response = await requestPasswordReset(email);
+    return response;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data);
+  }
+});
+
+export const resetPasswordAsync = createAsyncThunk('user/resetPassword', async ({ token, password }, thunkAPI) => {
+  try {
+    const response = await resetPassword(token, password);
     return response;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -62,7 +85,30 @@ const userSlice = createSlice({
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(requestPasswordResetAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(requestPasswordResetAsync.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(requestPasswordResetAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(resetPasswordAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(resetPasswordAsync.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(resetPasswordAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
+
   },
 });
 
