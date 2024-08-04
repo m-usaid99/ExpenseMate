@@ -27,7 +27,7 @@ export const requestPasswordReset = async (email) => {
     console.error('Error requesting password reset', error);
     throw error;
   }
-}
+};
 
 export const resetPassword = async (token, password) => {
   try {
@@ -37,4 +37,14 @@ export const resetPassword = async (token, password) => {
     console.error('Error resetting password:', error);
     throw error;
   }
-}
+};
+
+export const updateUserProfile = async (profileData) => {
+  const response = await apiClient.put('/users/profile', profileData);
+  return response;
+};
+
+export const updateUserSettings = async (settings) => {
+  const response = await apiClient.put('/users/settings', settings);
+  return response.data;
+};

@@ -13,20 +13,31 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import Logout from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
 import SettingsModal from "./SettingsModal"; // Adjust the import path accordingly
+import ProfileModal from "./ProfileModal";
 import { useDispatch } from "react-redux";
 import { logout } from '../features/user/userSlice';
 
 const NavBar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const dispatch = useDispatch();
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleProfileOpen = () => {
+    setProfileOpen(true);
+    handleMenuClose();
+  };
+
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleProfileClose = () => {
+    setProfileOpen(false);
   };
 
   const handleSettingsOpen = () => {
@@ -76,7 +87,7 @@ const NavBar = () => {
               },
             }}
           >
-            <MenuItem component={Link} to="/profile">
+            <MenuItem onClick={handleProfileOpen}>
               Profile
             </MenuItem>
             <MenuItem onClick={handleSettingsOpen}>
@@ -95,6 +106,7 @@ const NavBar = () => {
         </Toolbar>
       </AppBar>
       <SettingsModal open={settingsOpen} handleClose={handleSettingsClose} />
+      <ProfileModal open={profileOpen} handleClose={handleProfileClose} />
     </>
   );
 };

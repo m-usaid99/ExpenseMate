@@ -11,6 +11,7 @@ export const fetchIncomesAsync = createAsyncThunk('expenses/fetchIncomes', async
 export const addIncomeAsync = createAsyncThunk('income/addIncome', async (incomeData, thunkAPI) => {
   try {
     const newIncome = await addIncome(incomeData);
+    thunkAPI.dispatch(fetchIncomesAsync()); // Fetch updated data
     return newIncome;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -20,6 +21,7 @@ export const addIncomeAsync = createAsyncThunk('income/addIncome', async (income
 export const updateIncomeAsync = createAsyncThunk('income/updateIncome', async ({ id, incomeData }, thunkAPI) => {
   try {
     const updatedIncome = await updateIncome(id, incomeData);
+    thunkAPI.dispatch(fetchIncomesAsync()); // Fetch updated data
     return updatedIncome;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -29,6 +31,7 @@ export const updateIncomeAsync = createAsyncThunk('income/updateIncome', async (
 export const deleteIncomeAsync = createAsyncThunk('income/deleteIncome', async (id, thunkAPI) => {
   try {
     await deleteIncome(id);
+    thunkAPI.dispatch(fetchIncomesAsync()); // Fetch updated data
     return id;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);

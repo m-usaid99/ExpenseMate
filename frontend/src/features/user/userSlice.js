@@ -4,6 +4,8 @@ import {
   register as apiRegister,
   requestPasswordReset,
   resetPassword,
+  updateUserProfile,
+  updateUserSettings as apiUpdateUserSettings,
 } from '../../api/userService';
 
 export const login = createAsyncThunk('user/login', async (credentials, thunkAPI) => {
@@ -24,6 +26,16 @@ export const register = createAsyncThunk('user/register', async (userData, thunk
   }
 });
 
+export const updateUserSettingsAsync = createAsyncThunk('user/updateUserSettings', async (settings, thunkAPI) => {
+  try {
+    const response = await apiUpdateUserSettings(settings);
+    return response;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data);
+  }
+});
+
+
 export const requestPasswordResetAsync = createAsyncThunk('user/requestPasswordReset', async ({ email }, thunkAPI) => {
   try {
     const response = await requestPasswordReset(email);
@@ -42,6 +54,18 @@ export const resetPasswordAsync = createAsyncThunk('user/resetPassword', async (
   }
 });
 
+export const updateUserProfileAsync = createAsyncThunk(
+  'user/updateUserProfile',
+  async (profileData, thunkAPI) => {
+    try {
+      const response = await updateUserProfile(profileData);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const userInfoFromStorage = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo'))
   : null;
@@ -52,12 +76,17 @@ const userSlice = createSlice({
     userInfo: userInfoFromStorage,
     loading: false,
     error: null,
+    theme: localStorage.getItem('themeMode') || 'light', // Initialize theme from localStorage
   },
   reducers: {
     logout: (state) => {
       state.userInfo = null;
       localStorage.removeItem('userInfo');
-    }
+    },
+    toggleTheme: (state) => {
+      state.theme = state.theme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('themeMode', state.theme); // Save theme preference to localStorage
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -107,11 +136,32 @@ const userSlice = createSlice({
       .addCase(resetPasswordAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(updateUserProfileAsync.fulfilled, (state, action) => {
+        state.userInfo = action.payload;
+      })
+      .addCase(updateUserProfileAsync.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(updateUserSettingsAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUserSettingsAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userInfo = {
+          ...state.userInfo,
+          settings: action.payload.settings,
+        };
+        localStorage.setItem('userInfo', JSON.stringify(state.userInfo));  // Save updated settings to local storage
+      })
+      .addCase(updateUserSettingsAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
-
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, toggleTheme } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -120,7 +120,7 @@ const RegistrationPage = () => {
             Register
           </Button>
           <Link to='/'>
-            <Button variant='text'>Login</Button>
+            <Button variant='text'>Already have an account?</Button>
           </Link>
           {error && (
             <Alert severity="error">

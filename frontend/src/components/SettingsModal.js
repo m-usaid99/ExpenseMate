@@ -1,10 +1,21 @@
 // src/components/SettingsModal.js
 import React from 'react';
-import { Modal, Box, Typography, Switch, FormControlLabel, TextField, MenuItem } from '@mui/material';
-import { useTheme } from '../ThemeContext';
+import { Modal, Box, Typography, Switch, FormControlLabel, TextField, MenuItem, Button } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleTheme, updateUserSettingsAsync } from '../features/user/userSlice';
 
 const SettingsModal = ({ open, handleClose }) => {
-  const { mode, toggleTheme } = useTheme();
+  const dispatch = useDispatch();
+  const mode = useSelector((state) => state.user.theme);
+
+  const handleToggleTheme = () => {
+    dispatch(toggleTheme());
+  };
+
+  const handleSaveSettings = () => {
+    dispatch(updateUserSettingsAsync({ theme: mode }));
+    handleClose();
+  };
 
   return (
     <Modal
@@ -33,11 +44,10 @@ const SettingsModal = ({ open, handleClose }) => {
           control={
             <Switch
               checked={mode === 'dark'}
-              onChange={toggleTheme}
+              onChange={handleToggleTheme}
               name="themeToggle"
               color="primary"
-            />
-          }
+            />}
           label="Switch To Dark Mode"
           sx={{ marginTop: 1 }}
         />
@@ -64,6 +74,14 @@ const SettingsModal = ({ open, handleClose }) => {
             </MenuItem>
           </TextField>
         </Box>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSaveSettings}
+          sx={{ mt: 3 }}
+        >
+          Save Settings
+        </Button>
       </Box>
     </Modal>
   );

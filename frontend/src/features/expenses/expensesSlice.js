@@ -10,6 +10,7 @@ export const fetchExpensesAsync = createAsyncThunk('expenses/fetchExpenses', asy
 export const addExpenseAsync = createAsyncThunk("expenses/addExpense", async (expenseData, thunkAPI) => {
   try {
     const newExpense = await addExpense(expenseData);
+    thunkAPI.dispatch(fetchExpensesAsync()); // Fetch updated data
     return newExpense;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -19,6 +20,7 @@ export const addExpenseAsync = createAsyncThunk("expenses/addExpense", async (ex
 export const updateExpenseAsync = createAsyncThunk('expenses/updateExpense', async ({ id, expenseData }, thunkAPI) => {
   try {
     const updatedExpense = await updateExpense(id, expenseData);
+    thunkAPI.dispatch(fetchExpensesAsync()); // Fetch updated data
     return updatedExpense;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -29,6 +31,7 @@ export const deleteExpenseAsync = createAsyncThunk("expenses/deleteExpense",
   async (id, thunkAPI) => {
     try {
       await deleteExpense(id);
+      thunkAPI.dispatch(fetchExpensesAsync()); // Fetch updated data
       return id;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);

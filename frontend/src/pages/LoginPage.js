@@ -1,11 +1,12 @@
 // src/components/LoginPage.js
 import React, { useState } from 'react';
-import { Container, Typography, TextField, Button, Box, Alert } from '@mui/material';
+import { Container, Typography, TextField, Button, Box, Alert, useTheme } from '@mui/material';
 import { useNavigate, Link } from 'react-router-dom';
 import { login } from "../features/user/userSlice";
 import { useDispatch, useSelector } from 'react-redux';
 
 const LoginPage = () => {
+  const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, error, userInfo } = useSelector((state) => state.user);
@@ -22,19 +23,20 @@ const LoginPage = () => {
   }
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" sx={{ bgcolor: theme.palette.background.default }}>
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           mt: 8,
+          bgcolor: theme.palette.background.default,
         }}
       >
-        <Typography variant="h2" component="h1" gutterBottom>
+        <Typography variant="h2" component="h1" gutterBottom sx={{ color: theme.palette.text.primary }}>
           ExpenseMate
         </Typography>
-        <Typography variant="h5" component="h2" gutterBottom>
+        <Typography variant="h5" component="h2" gutterBottom sx={{ color: theme.palette.text.secondary }}>
           Login
         </Typography>
         {error && <Alert severity="error">{error.message}</Alert>}
@@ -42,7 +44,7 @@ const LoginPage = () => {
           component="form"
           sx={{
             mt: 1,
-            width: '100%', // Fix IE11 issue.
+            width: '100%',
           }}
           onSubmit={handleLogin}
         >
@@ -57,6 +59,7 @@ const LoginPage = () => {
             autoFocus
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            sx={{ bgcolor: theme.palette.background.paper, borderRadius: 1 }}
           />
           <TextField
             margin="normal"
