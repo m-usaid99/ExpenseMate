@@ -39,7 +39,7 @@ export const deleteExpenseAsync = createAsyncThunk("expenses/deleteExpense",
       return id;
     } catch (error) {
       thunkAPI.dispatch(showNotification({ message: 'Failed to delete expense!', type: 'error' })); // Dispatch success notification
-      return thunkAPI.rejectWithValue(error.response.data);
+      return id;
     }
   });
 

@@ -17,7 +17,6 @@ export const addIncomeAsync = createAsyncThunk('income/addIncome', async (income
     return newIncome;
   } catch (error) {
     thunkAPI.dispatch(showNotification({ message: 'Failed to add income!', type: 'error' })); // Dispatch success notification
-    return thunkAPI.rejectWithValue(error.response.data);
   }
 });
 

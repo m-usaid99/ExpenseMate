@@ -4,7 +4,6 @@ const User = require('../models/User');
 
 describe('User API', () => {
   let userToken;
-  let resetToken;
 
   beforeEach(async () => {
     await User.deleteMany({});

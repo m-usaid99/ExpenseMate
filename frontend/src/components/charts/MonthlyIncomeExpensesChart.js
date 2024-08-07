@@ -33,9 +33,6 @@ const MonthlyIncomeExpensesChart = () => {
   const filteredExpenses = filterLast6Months(expenseTrendsData);
   const filteredIncomes = filterLast6Months(incomeTrendsData);
 
-  console.log(filteredExpenses);
-  console.log(filteredIncomes);
-
   return (
     <Paper sx={{ padding: 2, marginBottom: 3 }}>
       <Typography variant="h5">Monthly Income vs Expenses</Typography>

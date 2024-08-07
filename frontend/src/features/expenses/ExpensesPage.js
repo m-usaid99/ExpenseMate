@@ -18,7 +18,7 @@ import ExpenseTrends from "./ExpenseTrends";
 
 const ExpensesPage = () => {
   const dispatch = useDispatch();
-  const { expenses } = useSelector((state) => state.expenses);
+  const { expenses, loading, error } = useSelector((state) => state.expenses);
   const totalExpenses = useSelector(selectTotalExpenses);
   const expenseTrendsData = useSelector(selectExpenseTrendsData);
   const [filters, setFilters] = useState({
