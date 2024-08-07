@@ -1,0 +1,218 @@
+openapi: 3.0.0
+info:
+  title: ExpenseMate API
+  description: API documentation for ExpenseMate application
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000/api
+    description: Local server
+
+components:
+  schemas:
+    Income:
+      type: object
+      properties:
+        _id:
+          type: string
+        user:
+          type: string
+        date:
+          type: string
+          format: date
+        source:
+          type: string
+        amount:
+          type: number
+        notes:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - date
+        - source
+        - amount
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        stack:
+          type: string
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []
+
+paths:
+  /income:
+    post:
+      summary: Add new income
+      tags: [Income]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date
+                source:
+                  type: string
+                amount:
+                  type: number
+                notes:
+                  type: string
+              required:
+                - date
+                - source
+                - amount
+      responses:
+        '201':
+          description: Income created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Income'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      summary: Get all incomes
+      tags:
+        - Income
+      parameters:
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          description: Start date for filtering incomes
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          description: End date for filtering incomes
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Category for filtering incomes
+        - in: query
+          name: tag
+          schema:
+            type: string
+            enum: [one-time, monthly, recurring]
+          description: Tag for filtering incomes
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Income'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /income/{id}:
+    put:
+      summary: Update income
+      tags: [Income]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date
+                source:
+                  type: string
+                amount:
+                  type: number
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Income updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Income'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Income not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete income
+      tags: [Income]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Income removed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Income not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
