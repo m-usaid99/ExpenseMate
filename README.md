@@ -1,5 +1,13 @@
 # ExpenseMate
 
+<!--toc:start-->
+
+- [ExpenseMate](#expensemate)
+  - [Features](#features)
+  - [Tech Stack](#tech-stack)
+  - [Usage](#usage) - [Authentication & Creating an Account](#authentication-creating-an-account) - [Dashboard](#dashboard) - [Expenses](#expenses) - [Income](#income) - [Update User Profile](#update-user-profile)
+  <!--toc:end-->
+
 ExpenseMate is a full-stack personal finance management web application designed to help users track
 their income, expenses, and budget efficiently. The app offers an intuitive interface for users to manage their financial
 activities, view transaction history, and gain insights into their spending habits through various reports and summaries.
@@ -89,5 +97,3 @@ Users can also toggle the theme of the user interface from light to dark. In add
 before a user logs in again.
 
 ![darkmode](https://imgur.com/n5QLWpM.gif)
-
-## Setup and Installation for Local Development
